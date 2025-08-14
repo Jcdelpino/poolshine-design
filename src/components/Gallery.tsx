@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Eye, X } from 'lucide-react';
 
 // Import gallery images
@@ -13,6 +14,7 @@ import gallery6 from '@/assets/gallery-6.jpg';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const { t } = useLanguage();
 
   const galleryItems = [
     {
@@ -59,10 +61,10 @@ const Gallery = () => {
     }
   ];
 
-  const categories = ['Todos', 'Mantenimiento', 'Renovación', 'Limpieza'];
-  const [activeCategory, setActiveCategory] = useState('Todos');
+  const categories = [t('gallery.filter.all'), t('gallery.filter.maintenance'), t('gallery.filter.renovation'), t('gallery.filter.cleaning')];
+  const [activeCategory, setActiveCategory] = useState(t('gallery.filter.all'));
 
-  const filteredItems = activeCategory === 'Todos' 
+  const filteredItems = activeCategory === t('gallery.filter.all')
     ? galleryItems 
     : galleryItems.filter(item => item.category.includes(activeCategory));
 
@@ -72,14 +74,13 @@ const Gallery = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Galería de{' '}
+            {t('gallery.title')}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              Proyectos
+              {t('gallery.title_highlight')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-            Descubre algunos de nuestros trabajos más destacados y las transformaciones 
-            que hemos logrado en piscinas de todo tipo.
+            {t('gallery.subtitle')}
           </p>
 
           {/* Category Filter */}

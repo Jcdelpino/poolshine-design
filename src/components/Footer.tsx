@@ -1,23 +1,24 @@
 import { Droplets, Phone, Mail, MapPin } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
 
   const services = [
-    'Limpieza Profesional',
-    'Mantenimiento Técnico',
-    'Renovación Completa',
-    'Tratamiento Químico',
-    'Servicio 24/7',
-    'Garantía Total'
+    t('services.cleaning.title'),
+    t('services.maintenance.title'),
+    t('services.renovation.title'),
+    t('services.chemical.title'),
+    t('services.support.title'),
+    t('services.warranty.title')
   ];
 
   const quickLinks = [
-    { label: 'Inicio', href: '#inicio' },
-    { label: 'Servicios', href: '#servicios' },  
-    { label: 'Galería', href: '#galeria' },
-    { label: 'Testimonios', href: '#testimonios' },
-    { label: 'Contacto', href: '#contacto' }
+    { label: t('nav.services'), href: '#servicios' },  
+    { label: t('nav.gallery'), href: '#galeria' },
+    { label: t('nav.testimonials'), href: '#testimonios' },
+    { label: t('nav.contact'), href: '#contacto' }
   ];
 
   return (
@@ -35,8 +36,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-primary-foreground/80 leading-relaxed mb-6">
-              Más de 10 años transformando piscinas en oasis cristalinos. 
-              Tu satisfacción es nuestra prioridad.
+              {t('footer.tagline')}
             </p>
             <div className="space-y-3">
               <div className="flex items-center text-primary-foreground/80">
@@ -57,7 +57,7 @@ const Footer = () => {
           {/* Services */}
           <div>
             <h3 className="text-lg font-semibold mb-6">
-              Nuestros Servicios
+              {t('footer.services_title')}
             </h3>
             <ul className="space-y-3">
               {services.map((service, index) => (
@@ -73,7 +73,7 @@ const Footer = () => {
           {/* Quick Links */}
           <div>
             <h3 className="text-lg font-semibold mb-6">
-              Enlaces Rápidos
+              {t('footer.links_title')}
             </h3>
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
@@ -92,17 +92,17 @@ const Footer = () => {
           {/* Contact CTA */}
           <div>
             <h3 className="text-lg font-semibold mb-6">
-              ¿Necesitas Ayuda?
+              {t('footer.help_title')}
             </h3>
             <p className="text-primary-foreground/80 mb-6">
-              Contáctanos para una cotización gratuita y personalizada.
+              {t('footer.help_desc')}
             </p>
             <div className="space-y-3">
               <button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105">
-                Cotización Gratuita
+                {t('footer.quote_button')}
               </button>
               <button className="w-full border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold py-3 px-6 rounded-lg transition-all duration-300">
-                WhatsApp Directo
+                {t('footer.whatsapp_button')}
               </button>
             </div>
           </div>
@@ -112,17 +112,17 @@ const Footer = () => {
         <div className="border-t border-primary-foreground/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-primary-foreground/70 text-sm mb-4 md:mb-0">
-              © {currentYear} Total Pool Service. Todos los derechos reservados.
+              © {currentYear} Total Pool Service. {t('footer.copyright')}
             </div>
             <div className="flex space-x-6 text-sm text-primary-foreground/70">
               <span className="hover:text-accent transition-colors cursor-pointer">
-                Política de Privacidad
+                {t('footer.privacy')}
               </span>
               <span className="hover:text-accent transition-colors cursor-pointer">
-                Términos de Servicio
+                {t('footer.terms')}
               </span>
               <span className="hover:text-accent transition-colors cursor-pointer">
-                Aviso Legal
+                {t('footer.legal')}
               </span>
             </div>
           </div>

@@ -118,6 +118,14 @@ const translations = {
     'contact.emergency.call': 'Llamar Ahora',
     'contact.emergency.whatsapp': 'WhatsApp',
     
+    // Contact services
+    'contact.service.weekly': 'Limpieza semanal',
+    'contact.service.monthly': 'Mantenimiento mensual',
+    'contact.service.renovation': 'Renovación completa',
+    'contact.service.emergency': 'Servicio de emergencia',
+    'contact.service.analysis': 'Análisis químico del agua',
+    'contact.service.repair': 'Reparación de equipos',
+    
     // Footer
     'footer.tagline': 'Más de 10 años transformando piscinas en oasis cristalinos. Tu satisfacción es nuestra prioridad.',
     'footer.services_title': 'Nuestros Servicios',
@@ -237,6 +245,14 @@ const translations = {
     'contact.emergency.desc': 'We have 24/7 emergency service to solve any problem with your pool.',
     'contact.emergency.call': 'Call Now',
     'contact.emergency.whatsapp': 'WhatsApp',
+    
+    // Contact services
+    'contact.service.weekly': 'Weekly cleaning',
+    'contact.service.monthly': 'Monthly maintenance',
+    'contact.service.renovation': 'Complete renovation',
+    'contact.service.emergency': 'Emergency service',
+    'contact.service.analysis': 'Water chemical analysis',
+    'contact.service.repair': 'Equipment repair',
     
     // Footer
     'footer.tagline': 'Over 10 years transforming pools into crystal clear oases. Your satisfaction is our priority.',

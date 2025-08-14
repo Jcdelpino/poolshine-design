@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   Droplets, 
   Wrench, 
@@ -9,42 +10,44 @@ import {
 } from 'lucide-react';
 
 const Services = () => {
+  const { t } = useLanguage();
+  
   const services = [
     {
       icon: Droplets,
-      title: 'Limpieza Profesional',
-      description: 'Limpieza profunda de piscinas con equipos especializados y productos de alta calidad.',
-      features: ['Aspirado completo', 'Limpieza de filtros', 'Balance químico']
+      title: t('services.cleaning.title'),
+      description: t('services.cleaning.desc'),
+      features: [t('services.cleaning.feat1'), t('services.cleaning.feat2'), t('services.cleaning.feat3')]
     },
     {
       icon: Wrench,
-      title: 'Mantenimiento Técnico',
-      description: 'Revisión y mantenimiento de equipos de filtración, bombas y sistemas de circulación.',
-      features: ['Revisión de bombas', 'Limpieza de skimmers', 'Calibración de equipos']
+      title: t('services.maintenance.title'),
+      description: t('services.maintenance.desc'),
+      features: [t('services.maintenance.feat1'), t('services.maintenance.feat2'), t('services.maintenance.feat3')]
     },
     {
       icon: Sparkles,
-      title: 'Renovación Completa',
-      description: 'Renovamos tu piscina desde azulejos hasta sistemas de filtración para que luzca como nueva.',
-      features: ['Cambio de azulejos', 'Renovación de liner', 'Actualización de equipos']
+      title: t('services.renovation.title'),
+      description: t('services.renovation.desc'),
+      features: [t('services.renovation.feat1'), t('services.renovation.feat2'), t('services.renovation.feat3')]
     },
     {
       icon: Shield,
-      title: 'Tratamiento Químico',
-      description: 'Análisis y tratamiento químico del agua para mantener niveles óptimos de pH y cloro.',
-      features: ['Análisis de agua', 'Dosificación química', 'Control de algas']
+      title: t('services.chemical.title'),
+      description: t('services.chemical.desc'),
+      features: [t('services.chemical.feat1'), t('services.chemical.feat2'), t('services.chemical.feat3')]
     },
     {
       icon: Clock,
-      title: 'Servicio 24/7',
-      description: 'Disponibilidad completa para emergencias y mantenimiento urgente de tu piscina.',
-      features: ['Emergencias 24h', 'Mantenimiento programado', 'Respuesta rápida']
+      title: t('services.support.title'),
+      description: t('services.support.desc'),
+      features: [t('services.support.feat1'), t('services.support.feat2'), t('services.support.feat3')]
     },
     {
       icon: Award,
-      title: 'Garantía Total',
-      description: 'Todos nuestros servicios incluyen garantía completa y seguimiento post-servicio.',
-      features: ['Garantía escrita', 'Seguimiento mensual', 'Satisfacción garantizada']
+      title: t('services.warranty.title'),
+      description: t('services.warranty.desc'),
+      features: [t('services.warranty.feat1'), t('services.warranty.feat2'), t('services.warranty.feat3')]
     }
   ];
 
@@ -54,14 +57,13 @@ const Services = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Nuestros{' '}
+            {t('services.title')}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              Servicios
+              {t('services.title_highlight')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Ofrecemos servicios integrales para el cuidado de tu piscina, 
-            desde mantenimiento regular hasta renovaciones completas.
+            {t('services.subtitle')}
           </p>
         </div>
 
@@ -111,14 +113,13 @@ const Services = () => {
         <div className="text-center mt-16">
           <div className="bg-card/60 backdrop-blur-sm rounded-2xl p-8 shadow-card-soft border border-border/50">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              ¿Necesitas un servicio personalizado?
+              {t('services.custom.title')}
             </h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Contacta con nuestro equipo para recibir una cotización personalizada 
-              según las necesidades específicas de tu piscina.
+              {t('services.custom.desc')}
             </p>
             <button className="bg-gradient-ocean text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:shadow-pool transition-all duration-300 transform hover:scale-105">
-              Solicitar Cotización Personalizada
+              {t('services.custom.cta')}
             </button>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   Phone, 
   Mail, 
@@ -13,40 +14,42 @@ import {
 } from 'lucide-react';
 
 const Contact = () => {
+  const { t } = useLanguage();
+  
   const contactInfo = [
     {
       icon: Phone,
-      title: 'Teléfono',
+      title: t('contact.info.phone'),
       info: '+52 (555) 123-4567',
-      description: 'Llamadas y WhatsApp disponibles'
+      description: t('contact.info.phone_desc')
     },
     {
       icon: Mail,
-      title: 'Email',
-      info: 'info@aquacarepro.com',
-      description: 'Respuesta en menos de 2 horas'
+      title: t('contact.info.email'),
+      info: 'info@totalpoolservice.com',
+      description: t('contact.info.email_desc')
     },
     {
       icon: MapPin,
-      title: 'Ubicación',
-      info: 'Ciudad de México y Área Metropolitana',
-      description: 'Cobertura en toda la zona'
+      title: t('contact.info.location'),
+      info: t('contact.info.location_value'),
+      description: t('contact.info.location_desc')
     },
     {
       icon: Clock,
-      title: 'Horarios',
-      info: 'Lun - Dom: 8:00 AM - 8:00 PM',
-      description: 'Emergencias 24/7'
+      title: t('contact.info.hours'),
+      info: t('contact.info.hours_value'),
+      description: t('contact.info.hours_desc')
     }
   ];
 
   const services = [
-    'Limpieza semanal',
-    'Mantenimiento mensual',
-    'Renovación completa',
-    'Servicio de emergencia',
-    'Análisis químico del agua',
-    'Reparación de equipos'
+    t('contact.service.weekly'),
+    t('contact.service.monthly'),
+    t('contact.service.renovation'),
+    t('contact.service.emergency'),
+    t('contact.service.analysis'),
+    t('contact.service.repair')
   ];
 
   return (
@@ -55,14 +58,13 @@ const Contact = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Contacta con{' '}
+            {t('contact.title')}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              Nosotros
+              {t('contact.title_highlight')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            ¿Listo para tener la piscina de tus sueños? Contáctanos para una cotización 
-            gratuita y personalizada.
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -76,10 +78,10 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-foreground">
-                    Solicitar Cotización
+                    {t('contact.form.title')}
                   </h3>
                   <p className="text-muted-foreground">
-                    Gratuita y sin compromiso
+                    {t('contact.form.subtitle')}
                   </p>
                 </div>
               </div>
@@ -88,7 +90,7 @@ const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
-                      Nombre
+                      {t('contact.form.name')}
                     </label>
                     <Input 
                       placeholder="Tu nombre completo"
@@ -97,7 +99,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
-                      Teléfono
+                      {t('contact.form.phone')}
                     </label>
                     <Input 
                       placeholder="(555) 123-4567"
@@ -108,7 +110,7 @@ const Contact = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Email
+                    {t('contact.form.email')}
                   </label>
                   <Input 
                     type="email"
@@ -119,10 +121,10 @@ const Contact = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Tipo de Servicio
+                    {t('contact.form.service')}
                   </label>
                   <select className="w-full p-3 border border-border/50 rounded-lg bg-background text-foreground focus:border-primary focus:outline-none">
-                    <option>Selecciona un servicio</option>
+                    <option>{t('contact.form.service_placeholder')}</option>
                     {services.map((service, index) => (
                       <option key={index} value={service}>
                         {service}
@@ -133,10 +135,10 @@ const Contact = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Mensaje
+                    {t('contact.form.message')}
                   </label>
                   <Textarea 
-                    placeholder="Cuéntanos sobre tu piscina y qué servicio necesitas..."
+                    placeholder={t('contact.form.message_placeholder')}
                     rows={4}
                     className="border-border/50 focus:border-primary resize-none"
                   />
@@ -147,7 +149,7 @@ const Contact = () => {
                   className="w-full bg-gradient-ocean hover:shadow-pool transition-all duration-300 transform hover:scale-105 py-3"
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  Enviar Solicitud
+                  {t('contact.form.submit')}
                 </Button>
               </form>
             </CardContent>
@@ -194,25 +196,24 @@ const Contact = () => {
                   <Droplets className="w-8 h-8 text-primary-foreground" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-4">
-                  ¿Necesitas Servicio Urgente?
+                  {t('contact.emergency.title')}
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  Contamos con servicio de emergencia 24/7 para resolver 
-                  cualquier problema con tu piscina.
+                  {t('contact.emergency.desc')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
                     className="bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
                     <Phone className="w-4 h-4 mr-2" />
-                    Llamar Ahora
+                    {t('contact.emergency.call')}
                   </Button>
                   <Button 
                     variant="outline"
                     className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp
+                    {t('contact.emergency.whatsapp')}
                   </Button>
                 </div>
               </CardContent>

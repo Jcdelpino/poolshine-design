@@ -1,8 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Star, Quote } from 'lucide-react';
 
 const Testimonials = () => {
+  const { t } = useLanguage();
+  
   const testimonials = [
     {
       id: 1,
@@ -61,10 +64,10 @@ const Testimonials = () => {
   ];
 
   const stats = [
-    { number: '500+', label: 'Clientes Satisfechos' },
-    { number: '10+', label: 'Años de Experiencia' },
-    { number: '100%', label: 'Garantía de Calidad' },
-    { number: '24/7', label: 'Soporte Disponible' }
+    { number: '500+', label: t('testimonials.stat1') },
+    { number: '10+', label: t('testimonials.stat2') },
+    { number: '100%', label: t('testimonials.stat3') },
+    { number: '24/7', label: t('testimonials.stat4') }
   ];
 
   return (
@@ -73,14 +76,13 @@ const Testimonials = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Lo que dicen nuestros{' '}
+            {t('testimonials.title')}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              Clientes
+              {t('testimonials.title_highlight')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            La satisfacción de nuestros clientes es nuestra prioridad. 
-            Descubre por qué confían en nosotros para el cuidado de sus piscinas.
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -158,14 +160,13 @@ const Testimonials = () => {
         <div className="text-center mt-16">
           <div className="bg-card/60 backdrop-blur-sm rounded-2xl p-8 shadow-card-soft border border-border/50">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              ¿Listo para unirte a nuestros clientes satisfechos?
+              {t('testimonials.cta.title')}
             </h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Contacta con nosotros hoy mismo y descubre por qué somos la opción preferida 
-              para el mantenimiento de piscinas.
+              {t('testimonials.cta.desc')}
             </p>
             <button className="bg-gradient-ocean text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:shadow-pool transition-all duration-300 transform hover:scale-105">
-              Solicitar Cotización Gratuita
+              {t('testimonials.cta.button')}
             </button>
           </div>
         </div>
