@@ -6,7 +6,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { label: 'Inicio', href: '#inicio' },
     { label: 'Servicios', href: '#servicios' },
     { label: 'Galería', href: '#galeria' },
     { label: 'Testimonios', href: '#testimonios' },
@@ -18,14 +17,14 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <a href="#inicio" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-300">
             <div className="w-10 h-10 bg-gradient-ocean rounded-full flex items-center justify-center">
               <Droplets className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold text-foreground">
               Total Pool Service
             </span>
-          </div>
+          </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
