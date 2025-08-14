@@ -1,8 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Phone } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import heroImage from '@/assets/hero-pool.jpg';
 
 const Hero = () => {
+  const { t } = useLanguage();
+  
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -19,24 +22,23 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Mantenimiento{' '}
+            {t('hero.title1')}{' '}
             <span className="bg-gradient-to-r from-accent to-primary-glow bg-clip-text text-transparent">
-              Profesional
+              {t('hero.title2')}
             </span>{' '}
-            de Piscinas
+            {t('hero.title3')}
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
-            Transformamos tu piscina en un oasis cristalino. Servicios de mantenimiento, 
-            renovación y limpieza profesional con más de 10 años de experiencia.
+            {t('hero.subtitle')}
           </p>
 
           {/* Benefits */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             {[
-              'Agua cristalina garantizada',
-              'Servicio 24/7',
-              'Presupuesto gratuito'
+              t('hero.benefit1'),
+              t('hero.benefit2'),
+              t('hero.benefit3')
             ].map((benefit, index) => (
               <div key={index} className="flex items-center space-x-2 text-primary-foreground/90">
                 <CheckCircle className="w-5 h-5 text-accent" />
@@ -51,7 +53,7 @@ const Hero = () => {
               size="lg" 
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-4 text-lg shadow-float hover:shadow-pool transition-all duration-300 transform hover:scale-105"
             >
-              Solicitar Cotización
+              {t('hero.cta1')}
             </Button>
             <Button 
               size="lg" 
@@ -59,7 +61,7 @@ const Hero = () => {
               className="border-2 border-primary-foreground/30 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 font-semibold px-8 py-4 text-lg transition-all duration-300"
             >
               <Phone className="w-5 h-5 mr-2" />
-              Llamar Ahora
+              {t('hero.cta2')}
             </Button>
           </div>
         </div>

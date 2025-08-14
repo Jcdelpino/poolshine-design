@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Menu, X, Droplets } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageToggle from '@/components/LanguageToggle';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const navItems = [
-    { label: 'Servicios', href: '#servicios' },
-    { label: 'Galería', href: '#galeria' },
-    { label: 'Testimonios', href: '#testimonios' },
-    { label: 'Contacto', href: '#contacto' },
+    { label: t('nav.services'), href: '#servicios' },
+    { label: t('nav.gallery'), href: '#galeria' },
+    { label: t('nav.testimonials'), href: '#testimonios' },
+    { label: t('nav.contact'), href: '#contacto' },
   ];
 
   return (
@@ -39,13 +42,14 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* Language Toggle & CTA Button */}
+          <div className="hidden md:flex items-center space-x-4">
+            <LanguageToggle />
             <Button 
               variant="default" 
               className="bg-gradient-ocean hover:shadow-pool transition-all duration-300"
             >
-              Cotizar Ahora
+              {t('nav.quote')}
             </Button>
           </div>
 
@@ -76,12 +80,15 @@ const Header = () => {
                   {item.label}
                 </a>
               ))}
-              <Button 
-                variant="default" 
-                className="bg-gradient-ocean hover:shadow-pool transition-all duration-300 mt-4"
-              >
-                Cotizar Ahora
-              </Button>
+              <div className="flex items-center justify-between mt-4">
+                <LanguageToggle />
+                <Button 
+                  variant="default" 
+                  className="bg-gradient-ocean hover:shadow-pool transition-all duration-300 flex-1 ml-4"
+                >
+                  {t('nav.quote')}
+                </Button>
+              </div>
             </nav>
           </div>
         )}
