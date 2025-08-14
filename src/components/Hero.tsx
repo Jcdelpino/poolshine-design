@@ -56,7 +56,7 @@ const Hero = () => {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm font-semibold px-8 py-4 text-lg transition-all duration-300"
+              className="border-2 border-primary-foreground/30 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 font-semibold px-8 py-4 text-lg transition-all duration-300"
             >
               <Phone className="w-5 h-5 mr-2" />
               Llamar Ahora
