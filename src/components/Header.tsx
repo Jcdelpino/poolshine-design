@@ -23,7 +23,7 @@ const Header = () => {
               <Droplets className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold text-foreground">
-              AquaCare Pro
+              Total Pool Service
             </span>
           </div>
 

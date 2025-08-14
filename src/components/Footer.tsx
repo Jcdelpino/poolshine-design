@@ -31,7 +31,7 @@ const Footer = () => {
                 <Droplets className="w-7 h-7 text-accent-foreground" />
               </div>
               <span className="text-2xl font-bold">
-                AquaCare Pro
+                Total Pool Service
               </span>
             </div>
             <p className="text-primary-foreground/80 leading-relaxed mb-6">
@@ -45,7 +45,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center text-primary-foreground/80">
                 <Mail className="w-4 h-4 mr-3" />
-                <span>info@aquacarepro.com</span>
+                <span>info@totalpoolservice.com</span>
               </div>
               <div className="flex items-center text-primary-foreground/80">
                 <MapPin className="w-4 h-4 mr-3" />  
@@ -112,7 +112,7 @@ const Footer = () => {
         <div className="border-t border-primary-foreground/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-primary-foreground/70 text-sm mb-4 md:mb-0">
-              © {currentYear} AquaCare Pro. Todos los derechos reservados.
+              © {currentYear} Total Pool Service. Todos los derechos reservados.
             </div>
             <div className="flex space-x-6 text-sm text-primary-foreground/70">
               <span className="hover:text-accent transition-colors cursor-pointer">
