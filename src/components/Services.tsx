@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContent } from '@/contexts/ContentContext';
 import { 
   Droplets, 
   Wrench, 
@@ -10,7 +11,9 @@ import {
 } from 'lucide-react';
 
 const Services = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const { content } = useContent();
+  const servicesContent = content.services[language as 'es' | 'en'];
   
   const services = [
     {
@@ -57,20 +60,20 @@ const Services = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            {t('services.title')}{' '}
+            {servicesContent.title}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              {t('services.title_highlight')}
+              {servicesContent.titleHighlight}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {t('services.subtitle')}
+            {servicesContent.subtitle}
           </p>
         </div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => {
-            const IconComponent = service.icon;
+          {servicesContent.items.map((service, index) => {
+            const IconComponent = services[index]?.icon || services[0].icon;
             return (
               <Card 
                 key={index} 
@@ -113,13 +116,13 @@ const Services = () => {
         <div className="text-center mt-16">
           <div className="bg-card/60 backdrop-blur-sm rounded-2xl p-8 shadow-card-soft border border-border/50">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              {t('services.custom.title')}
+              {servicesContent.customTitle}
             </h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              {t('services.custom.desc')}
+              {servicesContent.customDesc}
             </p>
             <button className="bg-gradient-ocean text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:shadow-pool transition-all duration-300 transform hover:scale-105">
-              {t('services.custom.cta')}
+              {servicesContent.customCta}
             </button>
           </div>
         </div>

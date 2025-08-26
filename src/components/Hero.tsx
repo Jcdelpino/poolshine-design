@@ -1,17 +1,20 @@
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Phone } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContent } from '@/contexts/ContentContext';
 import heroImage from '@/assets/hero-pool.jpg';
 
 const Hero = () => {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const { content } = useContent();
+  const heroContent = content.hero[language as 'es' | 'en'];
   
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src={heroImage}
+          src={heroContent.backgroundImage || heroImage}
           alt="Piscina cristalina mantenida profesionalmente"
           className="w-full h-full object-cover"
         />
@@ -22,23 +25,23 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            {t('hero.title1')}{' '}
+            {heroContent.title1}{' '}
             <span className="bg-gradient-to-r from-accent to-primary-glow bg-clip-text text-transparent">
-              {t('hero.title2')}
+              {heroContent.title2}
             </span>{' '}
-            {t('hero.title3')}
+            {heroContent.title3}
           </h1>
           
           <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 leading-relaxed">
-            {t('hero.subtitle')}
+            {heroContent.subtitle}
           </p>
 
           {/* Benefits */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             {[
-              t('hero.benefit1'),
-              t('hero.benefit2'),
-              t('hero.benefit3')
+              heroContent.benefit1,
+              heroContent.benefit2,
+              heroContent.benefit3
             ].map((benefit, index) => (
               <div key={index} className="flex items-center space-x-2 text-primary-foreground/90">
                 <CheckCircle className="w-5 h-5 text-accent" />
@@ -53,7 +56,7 @@ const Hero = () => {
               size="lg" 
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-4 text-lg shadow-float hover:shadow-pool transition-all duration-300 transform hover:scale-105"
             >
-              {t('hero.cta1')}
+              {heroContent.cta1}
             </Button>
             <Button 
               size="lg" 
@@ -61,7 +64,7 @@ const Hero = () => {
               className="border-2 border-primary-foreground/30 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 font-semibold px-8 py-4 text-lg transition-all duration-300"
             >
               <Phone className="w-5 h-5 mr-2" />
-              {t('hero.cta2')}
+              {heroContent.cta2}
             </Button>
           </div>
         </div>

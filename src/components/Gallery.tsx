@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContent } from '@/contexts/ContentContext';
 import { Eye, X } from 'lucide-react';
 
 // Import gallery images
@@ -14,59 +15,16 @@ import gallery6 from '@/assets/gallery-6.jpg';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const { t } = useLanguage();
-
-  const galleryItems = [
-    {
-      id: 1,
-      image: gallery1,
-      title: 'Piscina Infinity Luxury',
-      category: 'Mantenimiento Premium',
-      description: 'Piscina infinity con vista al océano, mantenimiento especializado en sistemas de desborde.'
-    },
-    {
-      id: 2,
-      image: gallery2,
-      title: 'Piscina Residencial Moderna',
-      category: 'Limpieza Profunda',
-      description: 'Piscina rectangular con sistema de filtración moderno, limpieza semanal programada.'
-    },
-    {
-      id: 3,
-      image: gallery3,
-      title: 'Renovación Completa',
-      category: 'Renovación',
-      description: 'Transformación total: nuevos azulejos, sistema de filtración y acabados modernos.'
-    },
-    {
-      id: 4,
-      image: gallery4,
-      title: 'Servicio Profesional',
-      category: 'Mantenimiento',
-      description: 'Nuestro equipo especializado realizando limpieza y mantenimiento técnico.'
-    },
-    {
-      id: 5,
-      image: gallery5,
-      title: 'Piscina con Spa',
-      category: 'Mantenimiento Especializado',
-      description: 'Piscina de lujo con jacuzzi integrado, mantenimiento de sistemas duales.'
-    },
-    {
-      id: 6,
-      image: gallery6,
-      title: 'Piscina Olímpica',
-      category: 'Mantenimiento Comercial',
-      description: 'Piscina de competición con estándares olímpicos, mantenimiento diario especializado.'
-    }
-  ];
+  const { language, t } = useLanguage();
+  const { content } = useContent();
+  const galleryContent = content.gallery[language as 'es' | 'en'];
 
   const categories = [t('gallery.filter.all'), t('gallery.filter.maintenance'), t('gallery.filter.renovation'), t('gallery.filter.cleaning')];
   const [activeCategory, setActiveCategory] = useState(t('gallery.filter.all'));
 
   const filteredItems = activeCategory === t('gallery.filter.all')
-    ? galleryItems 
-    : galleryItems.filter(item => item.category.includes(activeCategory));
+    ? galleryContent.items 
+    : galleryContent.items.filter(item => item.category.includes(activeCategory));
 
   return (
     <section id="galeria" className="py-20 bg-background">
@@ -74,13 +32,13 @@ const Gallery = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            {t('gallery.title')}{' '}
+            {galleryContent.title}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              {t('gallery.title_highlight')}
+              {galleryContent.titleHighlight}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-            {t('gallery.subtitle')}
+            {galleryContent.subtitle}
           </p>
 
           {/* Category Filter */}

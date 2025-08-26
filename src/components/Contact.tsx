@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContent } from '@/contexts/ContentContext';
 import { 
   Phone, 
   Mail, 
@@ -14,7 +15,9 @@ import {
 } from 'lucide-react';
 
 const Contact = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const { content } = useContent();
+  const contactContent = content.contact[language as 'es' | 'en'];
   
   const contactInfo = [
     {
@@ -58,13 +61,13 @@ const Contact = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            {t('contact.title')}{' '}
+            {contactContent.title}{' '}
             <span className="bg-gradient-ocean bg-clip-text text-transparent">
-              {t('contact.title_highlight')}
+              {contactContent.titleHighlight}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {t('contact.subtitle')}
+            {contactContent.subtitle}
           </p>
         </div>
 
@@ -196,10 +199,10 @@ const Contact = () => {
                   <Droplets className="w-8 h-8 text-primary-foreground" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-4">
-                  {t('contact.emergency.title')}
+                  {contactContent.emergencyTitle}
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  {t('contact.emergency.desc')}
+                  {contactContent.emergencyDesc}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 

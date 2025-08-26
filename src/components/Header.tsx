@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Menu, X, Droplets } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContent } from '@/contexts/ContentContext';
 import LanguageToggle from '@/components/LanguageToggle';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useLanguage();
+  const { content } = useContent();
 
   const navItems = [
     { label: t('nav.services'), href: '#servicios' },
@@ -25,7 +27,7 @@ const Header = () => {
               <Droplets className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold text-foreground">
-              Total Pool Service
+              {content.companyInfo.name}
             </span>
           </a>
 
