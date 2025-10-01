@@ -6,7 +6,7 @@ import gallery3 from '@/assets/gallery-3.jpg';
 import gallery4 from '@/assets/gallery-4.jpg';
 import gallery5 from '@/assets/gallery-5.jpg';
 import gallery6 from '@/assets/gallery-6.jpg';
-import totalPoolLogo from '@/assets/total-pool-logo.svg';
+// import totalPoolLogo from '@/assets/total-pool-logo.svg';
 
 // Content types for different sections
 export interface HeroContent {
@@ -308,7 +308,7 @@ const defaultContent: SiteContent = {
   },
   companyInfo: {
     name: 'Total Pool Service',
-    logo: totalPoolLogo,
+    logo: '/total-pool-logo.svg',
     tagline: {
       es: 'Más de 10 años transformando piscinas en oasis cristalinos. Tu satisfacción es nuestra prioridad.',
       en: 'Over 10 years transforming pools into crystal clear oases. Your satisfaction is our priority.'
