@@ -52,7 +52,9 @@ const Admin = () => {
 
         // Actualizar contenido con Data URL persistente
         if (section === 'hero') {
-          updateContent('hero', language, { [field]: dataUrl });
+          // Sincronizar imagen del hero en ambos idiomas para evitar desajustes
+          updateContent('hero', 'es', { [field]: dataUrl });
+          updateContent('hero', 'en', { [field]: dataUrl });
         } else if (section === 'gallery') {
           // Manejar actualización de galería
           const galleryItems = [...content.gallery[language as 'es' | 'en'].items];
@@ -63,7 +65,7 @@ const Admin = () => {
           }
         } else if (section === 'companyInfo' && field === 'logo') {
           // companyInfo no usa el parámetro language de la misma manera
-          updateContent('companyInfo', 'es', { [field]: dataUrl });
+          updateContent('companyInfo', '', { [field]: dataUrl });
         }
 
         // En una app real, aquí subirías al servidor
@@ -501,7 +503,7 @@ const Admin = () => {
                         onClick={() => {
                           const newItem = {
                             id: Date.now(),
-                            image: '/src/assets/placeholder.svg',
+                            image: '/placeholder.svg',
                             title: 'Nuevo Proyecto',
                             category: 'Mantenimiento',
                             description: 'Descripción del proyecto...'
