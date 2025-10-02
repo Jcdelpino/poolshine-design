@@ -320,24 +320,42 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [content, setContent] = useState<SiteContent>(defaultContent);
 
   const updateContent = (section: string, language: string, data: any) => {
-    setContent(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof SiteContent],
-        [language]: {
-          ...prev[section as keyof SiteContent][language as 'es' | 'en'],
-          ...data
-        }
+    setContent(prev => {
+      // Manejo especial para companyInfo que no tiene estructura multilenguaje en el nivel superior
+      if (section === 'companyInfo') {
+        return {
+          ...prev,
+          companyInfo: {
+            ...prev.companyInfo,
+            ...data
+          }
+        };
       }
-    }));
+      
+      // Para todas las demás secciones con estructura multilenguaje
+      return {
+        ...prev,
+        [section]: {
+          ...prev[section as keyof SiteContent],
+          [language]: {
+            ...(prev[section as keyof SiteContent] as any)[language as 'es' | 'en'],
+            ...data
+          }
+        }
+      };
+    });
   };
 
   const saveContent = async () => {
     try {
-      localStorage.setItem('siteContent', JSON.stringify(content));
-      console.log('Content saved successfully');
+      // Guardar el contenido actual
+      const contentToSave = JSON.stringify(content);
+      localStorage.setItem('siteContent', contentToSave);
+      console.log('Content saved successfully to localStorage');
+      return Promise.resolve();
     } catch (error) {
       console.error('Error saving content:', error);
+      return Promise.reject(error);
     }
   };
 
@@ -346,7 +364,31 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const savedContent = localStorage.getItem('siteContent');
       if (savedContent) {
         const parsedContent = JSON.parse(savedContent);
-        setContent({ ...defaultContent, ...parsedContent });
+        
+        // Mezclar contenido guardado con valores por defecto de forma profunda
+        const mergedContent = {
+          ...defaultContent,
+          hero: {
+            es: { ...defaultContent.hero.es, ...parsedContent.hero?.es },
+            en: { ...defaultContent.hero.en, ...parsedContent.hero?.en }
+          },
+          services: {
+            es: { ...defaultContent.services.es, ...parsedContent.services?.es },
+            en: { ...defaultContent.services.en, ...parsedContent.services?.en }
+          },
+          gallery: {
+            es: { ...defaultContent.gallery.es, ...parsedContent.gallery?.es },
+            en: { ...defaultContent.gallery.en, ...parsedContent.gallery?.en }
+          },
+          contact: {
+            es: { ...defaultContent.contact.es, ...parsedContent.contact?.es },
+            en: { ...defaultContent.contact.en, ...parsedContent.contact?.en }
+          },
+          companyInfo: { ...defaultContent.companyInfo, ...parsedContent.companyInfo }
+        };
+        
+        setContent(mergedContent);
+        console.log('Content loaded successfully from localStorage');
       }
     } catch (error) {
       console.error('Error loading content:', error);

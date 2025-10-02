@@ -57,7 +57,8 @@ const Admin = () => {
             updateContent('gallery', language, { items: galleryItems });
           }
         } else if (section === 'companyInfo' && field === 'logo') {
-          updateContent('companyInfo', language, { [field]: imageUrl });
+          // companyInfo no usa el parámetro language de la misma manera
+          updateContent('companyInfo', 'es', { [field]: imageUrl });
         }
         
         // In a real app, you would upload to a server here
@@ -72,8 +73,15 @@ const Admin = () => {
     const handleSave = async () => {
       try {
         await saveContent();
+        // Recargar el contenido para verificar la persistencia
+        console.log('Content saved, reloading to verify...');
         alert('Contenido guardado exitosamente');
+        // Esperar un momento y recargar para verificar
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } catch (error) {
+        console.error('Error saving:', error);
         alert('Error al guardar el contenido');
       }
     };
