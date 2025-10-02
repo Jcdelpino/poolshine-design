@@ -19,29 +19,30 @@ const Contact = () => {
   const { content } = useContent();
   const contactContent = content.contact[language as 'es' | 'en'];
   
+  const info = contactContent.info;
   const contactInfo = [
     {
       icon: Phone,
       title: t('contact.info.phone'),
-      info: '+52 (555) 123-4567',
+      info: info.phone,
       description: t('contact.info.phone_desc')
     },
     {
       icon: Mail,
       title: t('contact.info.email'),
-      info: 'info@totalpoolservice.com',
+      info: info.email,
       description: t('contact.info.email_desc')
     },
     {
       icon: MapPin,
       title: t('contact.info.location'),
-      info: t('contact.info.location_value'),
+      info: info.location,
       description: t('contact.info.location_desc')
     },
     {
       icon: Clock,
       title: t('contact.info.hours'),
-      info: t('contact.info.hours_value'),
+      info: info.hours,
       description: t('contact.info.hours_desc')
     }
   ];

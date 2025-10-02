@@ -42,27 +42,32 @@ const Admin = () => {
       setUploadingImage(`${section}-${field}`);
       
       try {
-        // Create object URL for preview
-        const imageUrl = URL.createObjectURL(file);
-        
-        // Update content with new image URL
+        // Convertir archivo a Data URL (base64) para persistencia en localStorage
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        // Actualizar contenido con Data URL persistente
         if (section === 'hero') {
-          updateContent('hero', language, { [field]: imageUrl });
+          updateContent('hero', language, { [field]: dataUrl });
         } else if (section === 'gallery') {
-          // Handle gallery image updates differently
+          // Manejar actualización de galería
           const galleryItems = [...content.gallery[language as 'es' | 'en'].items];
           const itemIndex = parseInt(field);
           if (galleryItems[itemIndex]) {
-            galleryItems[itemIndex].image = imageUrl;
+            galleryItems[itemIndex].image = dataUrl;
             updateContent('gallery', language, { items: galleryItems });
           }
         } else if (section === 'companyInfo' && field === 'logo') {
           // companyInfo no usa el parámetro language de la misma manera
-          updateContent('companyInfo', 'es', { [field]: imageUrl });
+          updateContent('companyInfo', 'es', { [field]: dataUrl });
         }
-        
-        // In a real app, you would upload to a server here
-        console.log('Image uploaded:', file.name);
+
+        // En una app real, aquí subirías al servidor
+        console.log('Image uploaded (base64):', file.name);
       } catch (error) {
         console.error('Error uploading image:', error);
       } finally {
