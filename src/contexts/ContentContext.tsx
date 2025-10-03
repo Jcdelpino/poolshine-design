@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-pool.jpg';
 import gallery1 from '@/assets/gallery-1.jpg';
 import gallery2 from '@/assets/gallery-2.jpg';
@@ -348,10 +349,30 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const saveContent = async () => {
     try {
-      // Guardar el contenido actual
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      // Save to Supabase
+      const { error } = await supabase
+        .from('site_content')
+        .upsert({
+          content_key: 'main_site_content',
+          content_data: content as any,
+          updated_by: user.id
+        }, {
+          onConflict: 'content_key'
+        });
+
+      if (error) throw error;
+
+      // Also save to localStorage as backup
       const contentToSave = JSON.stringify(content);
       localStorage.setItem('siteContent', contentToSave);
-      console.log('Content saved successfully to localStorage');
+      
+      console.log('Content saved successfully to database and localStorage');
       return Promise.resolve();
     } catch (error) {
       console.error('Error saving content:', error);
@@ -361,11 +382,32 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const loadContent = async () => {
     try {
-      const savedContent = localStorage.getItem('siteContent');
-      if (savedContent) {
-        const parsedContent = JSON.parse(savedContent);
+      // Try to load from Supabase first
+      const { data, error } = await supabase
+        .from('site_content')
+        .select('content_data')
+        .eq('content_key', 'main_site_content')
+        .maybeSingle();
+
+      let parsedContent = null;
+
+      if (data && !error) {
+        parsedContent = data.content_data;
+        console.log('Content loaded successfully from database');
         
-        // Mezclar contenido guardado con valores por defecto de forma profunda
+        // Save to localStorage as backup
+        localStorage.setItem('siteContent', JSON.stringify(parsedContent));
+      } else {
+        // Fallback to localStorage if database fails
+        const savedContent = localStorage.getItem('siteContent');
+        if (savedContent) {
+          parsedContent = JSON.parse(savedContent);
+          console.log('Content loaded from localStorage (fallback)');
+        }
+      }
+
+      if (parsedContent) {
+        // Merge loaded content with default content
         const mergedContent = {
           ...defaultContent,
           hero: {
@@ -388,7 +430,6 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         };
         
         setContent(mergedContent);
-        console.log('Content loaded successfully from localStorage');
       }
     } catch (error) {
       console.error('Error loading content:', error);

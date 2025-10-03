@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useContent } from '@/contexts/ContentContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,19 +26,60 @@ import {
   Phone,
   Mail,
   MapPin,
-  Clock
+  Clock,
+  LogOut,
+  Loader2
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Admin = () => {
   console.log('Admin component is loading...');
   
   try {
+    const navigate = useNavigate();
+    const { user, isAdmin, loading: authLoading, signOut } = useAuth();
     const { content, updateContent, saveContent } = useContent();
     const { language, setLanguage } = useLanguage();
     const [activeTab, setActiveTab] = useState('hero');
     const [previewMode, setPreviewMode] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [uploadingImage, setUploadingImage] = useState<string | null>(null);
+
+    // Redirect if not authenticated or not admin
+    useEffect(() => {
+      if (!authLoading) {
+        if (!user) {
+          toast.error('Debes iniciar sesión para acceder al panel de administración');
+          navigate('/auth');
+        } else if (!isAdmin) {
+          toast.error('No tienes permisos de administrador');
+          navigate('/');
+        }
+      }
+    }, [user, isAdmin, authLoading, navigate]);
+
+    const handleSignOut = async () => {
+      await signOut();
+      toast.success('Sesión cerrada exitosamente');
+      navigate('/auth');
+    };
+
+    // Show loading while checking auth
+    if (authLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="text-center space-y-4">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+            <p className="text-muted-foreground">Verificando permisos...</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Don't render admin panel if not authorized
+    if (!user || !isAdmin) {
+      return null;
+    }
 
     const handleImageUpload = async (file: File, section: string, field: string) => {
       setUploadingImage(`${section}-${field}`);
@@ -80,16 +123,11 @@ const Admin = () => {
     const handleSave = async () => {
       try {
         await saveContent();
-        // Recargar el contenido para verificar la persistencia
-        console.log('Content saved, reloading to verify...');
-        alert('Contenido guardado exitosamente');
-        // Esperar un momento y recargar para verificar
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        toast.success('Contenido guardado exitosamente');
+        console.log('Content saved successfully');
       } catch (error) {
         console.error('Error saving:', error);
-        alert('Error al guardar el contenido');
+        toast.error(error instanceof Error ? error.message : 'Error al guardar el contenido');
       }
     };
 
@@ -157,6 +195,10 @@ const Admin = () => {
               </div>
               
               <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  <span>{user?.email}</span>
+                </div>
+
                 <div className="flex items-center space-x-2">
                   <Globe className="w-4 h-4" />
                   <select 
@@ -180,6 +222,14 @@ const Admin = () => {
                 <Button onClick={handleSave} className="bg-primary">
                   <Save className="w-4 h-4 mr-2" />
                   Guardar cambios
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Cerrar Sesión
                 </Button>
               </div>
             </div>
