@@ -17,7 +17,7 @@ const Footer = () => {
   const quickLinks = [
     { label: t('nav.services'), href: '#servicios' },  
     { label: t('nav.gallery'), href: '#galeria' },
-    { label: t('nav.testimonials'), href: '#testimonios' },
+    { label: t('nav.testimonials'), href: 'https://g.page/r/Cb2M3n_C18cUECA/review', external: true },
     { label: t('nav.contact'), href: '#contacto' }
   ];
 
@@ -80,6 +80,7 @@ const Footer = () => {
                 <li key={index}>
                   <a 
                     href={link.href}
+                    {...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
                     className="text-primary-foreground/80 hover:text-accent transition-colors duration-300"
                   >
                     {link.label}

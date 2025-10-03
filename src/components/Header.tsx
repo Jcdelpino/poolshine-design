@@ -20,7 +20,8 @@ const Header = () => {
     href: '#galeria'
   }, {
     label: t('nav.testimonials'),
-    href: '#testimonios'
+    href: 'https://g.page/r/Cb2M3n_C18cUECA/review',
+    external: true
   }, {
     label: t('nav.contact'),
     href: '#contacto'
@@ -38,7 +39,7 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map(item => <a key={item.label} href={item.href} className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium">
+            {navItems.map(item => <a key={item.label} href={item.href} {...(item.external && { target: '_blank', rel: 'noopener noreferrer' })} className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium">
                 {item.label}
               </a>)}
           </nav>
@@ -60,7 +61,7 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col space-y-4">
-              {navItems.map(item => <a key={item.label} href={item.href} className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium px-2 py-1" onClick={() => setIsMenuOpen(false)}>
+              {navItems.map(item => <a key={item.label} href={item.href} {...(item.external && { target: '_blank', rel: 'noopener noreferrer' })} className="text-muted-foreground hover:text-primary transition-colors duration-300 font-medium px-2 py-1" onClick={() => setIsMenuOpen(false)}>
                   {item.label}
                 </a>)}
               <div className="flex items-center justify-between mt-4">
