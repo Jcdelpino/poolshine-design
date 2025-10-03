@@ -1,9 +1,12 @@
 import { Droplets, Phone, Mail, MapPin } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContent } from '@/contexts/ContentContext';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const { content } = useContent();
+  const contactInfo = content.contact[language as 'es' | 'en'].info;
 
   const services = [
     t('services.cleaning.title'),
@@ -41,15 +44,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center text-primary-foreground/80">
                 <Phone className="w-4 h-4 mr-3" />
-                <span>+52 (555) 123-4567</span>
+                <span>{contactInfo.phone}</span>
               </div>
               <div className="flex items-center text-primary-foreground/80">
                 <Mail className="w-4 h-4 mr-3" />
-                <span>info@totalpoolservice.com</span>
+                <span>{contactInfo.email}</span>
               </div>
               <div className="flex items-center text-primary-foreground/80">
                 <MapPin className="w-4 h-4 mr-3" />  
-                <span>Ciudad de México</span>
+                <span>{contactInfo.location}</span>
               </div>
             </div>
           </div>
