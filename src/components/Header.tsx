@@ -32,7 +32,13 @@ const Header = () => {
           {/* Logo */}
           <a href="#inicio" className="flex items-center space-x-2 hover:opacity-80 transition-opacity duration-300">
             <div className="w-auto h-14 flex items-center justify-center">
-              <img src={content.companyInfo.logo} alt={content.companyInfo.name} className="h-14 w-auto object-contain" />
+              <img 
+                src={content.companyInfo.logo?.startsWith('/src/') 
+                  ? content.companyInfo.logo.replace('/src/assets/', '/') 
+                  : content.companyInfo.logo} 
+                alt={content.companyInfo.name} 
+                className="h-14 w-auto object-contain" 
+              />
             </div>
             
           </a>

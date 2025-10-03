@@ -14,7 +14,9 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src={heroContent.backgroundImage || heroImage}
+          src={heroContent.backgroundImage?.startsWith('/src/') 
+            ? heroContent.backgroundImage.replace('/src/assets/', '/') 
+            : (heroContent.backgroundImage || heroImage)}
           alt="Piscina cristalina mantenida profesionalmente"
           className="w-full h-full object-cover"
         />

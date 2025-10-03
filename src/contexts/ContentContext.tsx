@@ -409,8 +409,30 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (savedContent) {
         const parsedContent = JSON.parse(savedContent);
         
+        // Función para corregir rutas de imágenes inválidas
+        const fixImagePaths = (obj: any): any => {
+          if (typeof obj === 'string' && obj.startsWith('/src/assets/')) {
+            // Convertir /src/assets/image.jpg a /image.jpg
+            return obj.replace('/src/assets/', '/');
+          }
+          if (Array.isArray(obj)) {
+            return obj.map(item => fixImagePaths(item));
+          }
+          if (obj && typeof obj === 'object') {
+            const fixed: any = {};
+            for (const key in obj) {
+              fixed[key] = fixImagePaths(obj[key]);
+            }
+            return fixed;
+          }
+          return obj;
+        };
+        
+        // Corregir rutas de imágenes antes de hacer merge
+        const fixedContent = fixImagePaths(parsedContent);
+        
         // Usar deepMerge para mezclar contenido guardado con valores por defecto
-        const mergedContent = deepMerge(defaultContent, parsedContent);
+        const mergedContent = deepMerge(defaultContent, fixedContent);
         
         setContent(mergedContent);
         console.log('Content loaded successfully from localStorage');
