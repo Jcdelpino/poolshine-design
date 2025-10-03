@@ -1,13 +1,34 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import heroImage from '@/assets/hero-pool.jpg';
-import gallery1 from '@/assets/gallery-1.jpg';
-import gallery2 from '@/assets/gallery-2.jpg';
-import gallery3 from '@/assets/gallery-3.jpg';
-import gallery4 from '@/assets/gallery-4.jpg';
-import gallery5 from '@/assets/gallery-5.jpg';
-import gallery6 from '@/assets/gallery-6.jpg';
-import totalPoolLogo from '@/assets/total-pool-logo.png';
+
+// Use public folder paths for images to ensure they load correctly in Vercel
+const heroImage = '/hero-pool.jpg';
+const gallery1 = '/gallery-1.jpg';
+const gallery2 = '/gallery-2.jpg';
+const gallery3 = '/gallery-3.jpg';
+const gallery4 = '/gallery-4.jpg';
+const gallery5 = '/gallery-5.jpg';
+const gallery6 = '/gallery-6.jpg';
+const totalPoolLogo = '/total-pool-logo.png';
+
+// Función helper para hacer merge profundo de objetos
+const deepMerge = (target: any, source: any): any => {
+  const result = { ...target };
+  
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      result[key] = deepMerge(target[key] || {}, source[key]);
+    } else if (source[key] !== undefined) {
+      // Para arrays, reemplazar completamente en lugar de hacer merge
+      if (Array.isArray(source[key])) {
+        result[key] = [...source[key]];
+      } else {
+        result[key] = source[key];
+      }
+    }
+  }
+  
+  return result;
+};
 
 // Content types for different sections
 export interface HeroContent {
@@ -322,57 +343,59 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateContent = (section: string, language: string, data: any) => {
     setContent(prev => {
+      let newContent;
+      
       // Manejo especial para companyInfo que no tiene estructura multilenguaje en el nivel superior
       if (section === 'companyInfo') {
-        return {
+        newContent = {
           ...prev,
           companyInfo: {
             ...prev.companyInfo,
             ...data
           }
         };
+      } else {
+        // Para todas las demás secciones con estructura multilenguaje
+        newContent = {
+          ...prev,
+          [section]: {
+            ...prev[section as keyof SiteContent],
+            [language]: {
+              ...(prev[section as keyof SiteContent] as any)[language as 'es' | 'en'],
+              ...data
+            }
+          }
+        };
       }
       
-      // Para todas las demás secciones con estructura multilenguaje
-      return {
-        ...prev,
-        [section]: {
-          ...prev[section as keyof SiteContent],
-          [language]: {
-            ...(prev[section as keyof SiteContent] as any)[language as 'es' | 'en'],
-            ...data
-          }
-        }
-      };
+      // Guardar automáticamente en localStorage después de cada actualización
+      try {
+        localStorage.setItem('siteContent', JSON.stringify(newContent));
+        console.log('Content auto-saved to localStorage');
+      } catch (error) {
+        console.error('Error auto-saving content:', error);
+      }
+      
+      return newContent;
     });
   };
 
   const saveContent = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Usuario no autenticado');
+      // El contenido ya se guarda automáticamente en updateContent
+      // Esta función ahora solo verifica que el contenido esté guardado
+      const savedContent = localStorage.getItem('siteContent');
+      if (savedContent) {
+        const parsedContent = JSON.parse(savedContent);
+        if (JSON.stringify(parsedContent) === JSON.stringify(content)) {
+          console.log('Content is already saved and up to date');
+          return Promise.resolve();
+        }
       }
-
-      // Save to Supabase
-      const { error } = await supabase
-        .from('site_content')
-        .upsert({
-          content_key: 'main_site_content',
-          content_data: content as any,
-          updated_by: user.id
-        }, {
-          onConflict: 'content_key'
-        });
-
-      if (error) throw error;
-
-      // Also save to localStorage as backup
-      const contentToSave = JSON.stringify(content);
-      localStorage.setItem('siteContent', contentToSave);
       
-      console.log('Content saved successfully to database and localStorage');
+      // Si por alguna razón no está guardado, guardarlo ahora
+      localStorage.setItem('siteContent', JSON.stringify(content));
+      console.log('Content saved successfully to localStorage');
       return Promise.resolve();
     } catch (error) {
       console.error('Error saving content:', error);
@@ -382,54 +405,15 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const loadContent = async () => {
     try {
-      // Try to load from Supabase first
-      const { data, error } = await supabase
-        .from('site_content')
-        .select('content_data')
-        .eq('content_key', 'main_site_content')
-        .maybeSingle();
-
-      let parsedContent = null;
-
-      if (data && !error) {
-        parsedContent = data.content_data;
-        console.log('Content loaded successfully from database');
+      const savedContent = localStorage.getItem('siteContent');
+      if (savedContent) {
+        const parsedContent = JSON.parse(savedContent);
         
-        // Save to localStorage as backup
-        localStorage.setItem('siteContent', JSON.stringify(parsedContent));
-      } else {
-        // Fallback to localStorage if database fails
-        const savedContent = localStorage.getItem('siteContent');
-        if (savedContent) {
-          parsedContent = JSON.parse(savedContent);
-          console.log('Content loaded from localStorage (fallback)');
-        }
-      }
-
-      if (parsedContent) {
-        // Merge loaded content with default content
-        const mergedContent = {
-          ...defaultContent,
-          hero: {
-            es: { ...defaultContent.hero.es, ...parsedContent.hero?.es },
-            en: { ...defaultContent.hero.en, ...parsedContent.hero?.en }
-          },
-          services: {
-            es: { ...defaultContent.services.es, ...parsedContent.services?.es },
-            en: { ...defaultContent.services.en, ...parsedContent.services?.en }
-          },
-          gallery: {
-            es: { ...defaultContent.gallery.es, ...parsedContent.gallery?.es },
-            en: { ...defaultContent.gallery.en, ...parsedContent.gallery?.en }
-          },
-          contact: {
-            es: { ...defaultContent.contact.es, ...parsedContent.contact?.es },
-            en: { ...defaultContent.contact.en, ...parsedContent.contact?.en }
-          },
-          companyInfo: { ...defaultContent.companyInfo, ...parsedContent.companyInfo }
-        };
+        // Usar deepMerge para mezclar contenido guardado con valores por defecto
+        const mergedContent = deepMerge(defaultContent, parsedContent);
         
         setContent(mergedContent);
+        console.log('Content loaded successfully from localStorage');
       }
     } catch (error) {
       console.error('Error loading content:', error);
