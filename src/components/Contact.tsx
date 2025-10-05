@@ -18,6 +18,20 @@ const Contact = () => {
   const { language, t } = useLanguage();
   const { content } = useContent();
   const contactContent = content.contact[language as 'es' | 'en'];
+
+  const openWhatsApp = () => {
+    const phoneNumber = "12392982858"; // +1(239)2982858 sin caracteres especiales
+    const message = language === 'es' 
+      ? "¡Hola! Necesito información sobre servicios de emergencia para mi piscina."
+      : "Hello! I need information about emergency services for my pool.";
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const makePhoneCall = () => {
+    window.location.href = "tel:+12392982858";
+  };
   
   const info = contactContent.info;
   const contactInfo = [
@@ -208,6 +222,7 @@ const Contact = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
                     className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                    onClick={makePhoneCall}
                   >
                     <Phone className="w-4 h-4 mr-2" />
                     {t('contact.emergency.call')}
@@ -215,6 +230,7 @@ const Contact = () => {
                   <Button 
                     variant="outline"
                     className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    onClick={openWhatsApp}
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
                     {t('contact.emergency.whatsapp')}

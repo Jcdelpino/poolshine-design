@@ -27,6 +27,16 @@ const Footer = () => {
     }
   };
 
+  const openWhatsApp = () => {
+    const phoneNumber = "12392982858"; // +1(239)2982858 sin caracteres especiales
+    const message = language === 'es' 
+      ? "¡Hola! Me interesa obtener información sobre sus servicios de piscina."
+      : "Hello! I'm interested in getting information about your pool services.";
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   const services = [
     t('services.cleaning.title'),
     t('services.maintenance.title'),
@@ -129,7 +139,7 @@ const Footer = () => {
               </button>
               <button 
                 className="w-full border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-semibold py-3 px-6 rounded-lg transition-all duration-300"
-                onClick={scrollToQuoteForm}
+                onClick={openWhatsApp}
               >
                 {t('footer.whatsapp_button')}
               </button>
