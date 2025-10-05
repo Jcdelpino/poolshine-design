@@ -8,6 +8,25 @@ const Hero = () => {
   const { language } = useLanguage();
   const { content } = useContent();
   const heroContent = content.hero[language as 'es' | 'en'];
+
+  const scrollToQuoteForm = () => {
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+      // Smooth scroll to the form
+      quoteForm.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+      
+      // Add highlight effect temporarily
+      setTimeout(() => {
+        quoteForm.classList.add('ring-4', 'ring-primary/30', 'ring-offset-4');
+        setTimeout(() => {
+          quoteForm.classList.remove('ring-4', 'ring-primary/30', 'ring-offset-4');
+        }, 2000);
+      }, 500);
+    }
+  };
   
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -57,6 +76,7 @@ const Hero = () => {
             <Button 
               size="lg" 
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-4 text-lg shadow-float hover:shadow-pool transition-all duration-300 transform hover:scale-105"
+              onClick={scrollToQuoteForm}
             >
               {heroContent.cta1}
             </Button>
@@ -64,6 +84,7 @@ const Hero = () => {
               size="lg" 
               variant="outline" 
               className="border-2 border-primary-foreground/30 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 font-semibold px-8 py-4 text-lg transition-all duration-300"
+              onClick={scrollToQuoteForm}
             >
               <Phone className="w-5 h-5 mr-2" />
               {heroContent.cta2}
