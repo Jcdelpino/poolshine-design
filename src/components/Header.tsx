@@ -12,6 +12,26 @@ const Header = () => {
   const {
     content
   } = useContent();
+
+  const scrollToQuoteForm = () => {
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+      // Smooth scroll to the form
+      quoteForm.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+      
+      // Add highlight effect temporarily
+      setTimeout(() => {
+        quoteForm.classList.add('ring-4', 'ring-primary/30', 'ring-offset-4');
+        setTimeout(() => {
+          quoteForm.classList.remove('ring-4', 'ring-primary/30', 'ring-offset-4');
+        }, 2000);
+      }, 500);
+    }
+    setIsMenuOpen(false); // Close mobile menu if open
+  };
   const navItems = [{
     label: t('nav.services'),
     href: '#servicios'
@@ -53,7 +73,11 @@ const Header = () => {
           {/* Language Toggle & CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
             <LanguageToggle />
-            <Button variant="default" className="bg-gradient-ocean hover:shadow-pool transition-all duration-300">
+            <Button 
+              variant="default" 
+              className="bg-gradient-ocean hover:shadow-pool transition-all duration-300"
+              onClick={scrollToQuoteForm}
+            >
               {t('nav.quote')}
             </Button>
           </div>
@@ -72,7 +96,11 @@ const Header = () => {
                 </a>)}
               <div className="flex items-center justify-between mt-4">
                 <LanguageToggle />
-                <Button variant="default" className="bg-gradient-ocean hover:shadow-pool transition-all duration-300 flex-1 ml-4">
+                <Button 
+                  variant="default" 
+                  className="bg-gradient-ocean hover:shadow-pool transition-all duration-300 flex-1 ml-4"
+                  onClick={scrollToQuoteForm}
+                >
                   {t('nav.quote')}
                 </Button>
               </div>

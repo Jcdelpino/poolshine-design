@@ -74,7 +74,7 @@ const Contact = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="shadow-card-soft border-border/50">
+          <Card id="quote-form" className="shadow-card-soft border-border/50 transition-all duration-500">
             <CardContent className="p-8">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-ocean rounded-xl flex items-center justify-center mr-4">
