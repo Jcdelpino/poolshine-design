@@ -14,6 +14,25 @@ const Services = () => {
   const { language, t } = useLanguage();
   const { content } = useContent();
   const servicesContent = content.services[language as 'es' | 'en'];
+
+  const scrollToQuoteForm = () => {
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+      // Smooth scroll to the form
+      quoteForm.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+      
+      // Add highlight effect temporarily
+      setTimeout(() => {
+        quoteForm.classList.add('ring-4', 'ring-primary/30', 'ring-offset-4');
+        setTimeout(() => {
+          quoteForm.classList.remove('ring-4', 'ring-primary/30', 'ring-offset-4');
+        }, 2000);
+      }, 500);
+    }
+  };
   
   const services = [
     {
@@ -121,7 +140,10 @@ const Services = () => {
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               {servicesContent.customDesc}
             </p>
-            <button className="bg-gradient-ocean text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:shadow-pool transition-all duration-300 transform hover:scale-105">
+            <button 
+              className="bg-gradient-ocean text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:shadow-pool transition-all duration-300 transform hover:scale-105"
+              onClick={scrollToQuoteForm}
+            >
               {servicesContent.customCta}
             </button>
           </div>
