@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { ContentService } from '@/services/contentService';
 
 // Use public folder paths for images to ensure they load correctly in Vercel
 const heroImage = '/hero-pool.jpg';
@@ -135,7 +137,7 @@ export interface SiteContent {
 
 interface ContentContextType {
   content: SiteContent;
-  updateContent: (section: string, language: string, data: any) => void;
+  updateContent: (section: string, language: string, data: any) => Promise<void>;
   saveContent: () => Promise<void>;
   loadContent: () => Promise<void>;
 }
@@ -341,7 +343,7 @@ const defaultContent: SiteContent = {
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [content, setContent] = useState<SiteContent>(defaultContent);
 
-  const updateContent = (section: string, language: string, data: any) => {
+  const updateContent = async (section: string, language: string, data: any) => {
     setContent(prev => {
       let newContent;
       
@@ -372,6 +374,17 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         localStorage.setItem('siteContent', JSON.stringify(newContent));
         console.log('Content auto-saved to localStorage');
+        
+        // También intentar guardar en Supabase si hay usuario autenticado
+        ContentService.saveToSupabase(newContent).then((success) => {
+          if (success) {
+            console.log('Content auto-saved to Supabase');
+          } else {
+            console.warn('Failed to auto-save to Supabase');
+          }
+        }).catch((error) => {
+          console.error('Error auto-saving to Supabase:', error);
+        });
       } catch (error) {
         console.error('Error auto-saving content:', error);
       }
@@ -382,20 +395,18 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const saveContent = async () => {
     try {
-      // El contenido ya se guarda automáticamente en updateContent
-      // Esta función ahora solo verifica que el contenido esté guardado
-      const savedContent = localStorage.getItem('siteContent');
-      if (savedContent) {
-        const parsedContent = JSON.parse(savedContent);
-        if (JSON.stringify(parsedContent) === JSON.stringify(content)) {
-          console.log('Content is already saved and up to date');
-          return Promise.resolve();
-        }
-      }
-      
-      // Si por alguna razón no está guardado, guardarlo ahora
+      // Primero guardar en localStorage como backup
       localStorage.setItem('siteContent', JSON.stringify(content));
-      console.log('Content saved successfully to localStorage');
+      
+      // Luego intentar guardar en Supabase usando el servicio
+      const success = await ContentService.saveToSupabase(content);
+      
+      if (!success) {
+        console.warn('Failed to save to Supabase, content saved to localStorage only');
+        return Promise.resolve();
+      }
+
+      console.log('Content saved successfully to both localStorage and Supabase');
       return Promise.resolve();
     } catch (error) {
       console.error('Error saving content:', error);
@@ -405,28 +416,52 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const loadContent = async () => {
     try {
+      // Función para corregir rutas de imágenes inválidas
+      const fixImagePaths = (obj: any): any => {
+        if (typeof obj === 'string' && obj.startsWith('/src/assets/')) {
+          // Convertir /src/assets/image.jpg a /image.jpg
+          return obj.replace('/src/assets/', '/');
+        }
+        if (Array.isArray(obj)) {
+          return obj.map(item => fixImagePaths(item));
+        }
+        if (obj && typeof obj === 'object') {
+          const fixed: any = {};
+          for (const key in obj) {
+            fixed[key] = fixImagePaths(obj[key]);
+          }
+          return fixed;
+        }
+        return obj;
+      };
+
+      // Intentar cargar desde Supabase primero usando el servicio
+      try {
+        const supabaseContent = await ContentService.loadFromSupabase();
+        
+        if (supabaseContent) {
+          // Corregir rutas de imágenes antes de hacer merge
+          const fixedContent = fixImagePaths(supabaseContent);
+          
+          // Usar deepMerge para mezclar contenido de Supabase con valores por defecto
+          const mergedContent = deepMerge(defaultContent, fixedContent);
+          
+          setContent(mergedContent);
+          
+          // Sincronizar localStorage con Supabase
+          localStorage.setItem('siteContent', JSON.stringify(mergedContent));
+          
+          console.log('Content loaded successfully from Supabase');
+          return;
+        }
+      } catch (supabaseError) {
+        console.warn('Could not load from Supabase, falling back to localStorage:', supabaseError);
+      }
+
+      // Fallback a localStorage si Supabase falla
       const savedContent = localStorage.getItem('siteContent');
       if (savedContent) {
         const parsedContent = JSON.parse(savedContent);
-        
-        // Función para corregir rutas de imágenes inválidas
-        const fixImagePaths = (obj: any): any => {
-          if (typeof obj === 'string' && obj.startsWith('/src/assets/')) {
-            // Convertir /src/assets/image.jpg a /image.jpg
-            return obj.replace('/src/assets/', '/');
-          }
-          if (Array.isArray(obj)) {
-            return obj.map(item => fixImagePaths(item));
-          }
-          if (obj && typeof obj === 'object') {
-            const fixed: any = {};
-            for (const key in obj) {
-              fixed[key] = fixImagePaths(obj[key]);
-            }
-            return fixed;
-          }
-          return obj;
-        };
         
         // Corregir rutas de imágenes antes de hacer merge
         const fixedContent = fixImagePaths(parsedContent);

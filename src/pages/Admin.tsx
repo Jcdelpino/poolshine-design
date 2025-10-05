@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { ContentStatus } from '@/components/ContentStatus';
 import { 
   Save, 
   Upload, 
@@ -31,7 +32,7 @@ const Admin = () => {
   console.log('Admin component is loading...');
   
   try {
-    const { content, updateContent, saveContent } = useContent();
+    const { content, updateContent, saveContent, loadContent } = useContent();
     const { language, setLanguage } = useLanguage();
     const [activeTab, setActiveTab] = useState('hero');
     const [previewMode, setPreviewMode] = useState(false);
@@ -183,6 +184,11 @@ const Admin = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8">
+          {/* Content Status Card */}
+          <div className="mb-6">
+            <ContentStatus onRefresh={loadContent} />
+          </div>
+
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="hero" className="flex items-center space-x-2">
