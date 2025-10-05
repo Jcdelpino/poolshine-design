@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +20,17 @@ const Contact = () => {
   const { content } = useContent();
   const contactContent = content.contact[language as 'es' | 'en'];
 
+  // Estado del formulario
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: '',
+    message: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const openWhatsApp = () => {
     const phoneNumber = "12392982858"; // +1(239)2982858 sin caracteres especiales
     const message = language === 'es' 
@@ -31,6 +43,78 @@ const Contact = () => {
 
   const makePhoneCall = () => {
     window.location.href = "tel:+12392982858";
+  };
+
+  // Función para manejar cambios en el formulario
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Función para enviar formulario por WhatsApp
+  const submitFormToWhatsApp = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Validar campos requeridos
+    if (!formData.name || !formData.phone || !formData.email) {
+      alert(language === 'es' 
+        ? 'Por favor, complete todos los campos requeridos.' 
+        : 'Please fill in all required fields.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Crear mensaje para WhatsApp
+    const whatsappMessage = language === 'es' 
+      ? `🏊‍♂️ *SOLICITUD DE COTIZACIÓN - Total Pool Service*
+
+*Cliente:* ${formData.name}
+*Teléfono:* ${formData.phone}
+*Email:* ${formData.email}
+*Servicio de interés:* ${formData.service || 'No especificado'}
+*Mensaje:* ${formData.message || 'Sin mensaje adicional'}
+
+---
+*Solicitud enviada desde el sitio web*`
+      : `🏊‍♂️ *QUOTE REQUEST - Total Pool Service*
+
+*Client:* ${formData.name}
+*Phone:* ${formData.phone}
+*Email:* ${formData.email}
+*Service of interest:* ${formData.service || 'Not specified'}
+*Message:* ${formData.message || 'No additional message'}
+
+---
+*Request sent from website*`;
+
+    // Crear URL de WhatsApp
+    const phoneNumber = "12392982858";
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+
+    // Limpiar formulario después de un breve delay
+    setTimeout(() => {
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        service: '',
+        message: ''
+      });
+      setIsSubmitting(false);
+      
+      // Mostrar mensaje de confirmación
+      alert(language === 'es' 
+        ? '¡Formulario enviado! Se abrirá WhatsApp con su solicitud.' 
+        : 'Form submitted! WhatsApp will open with your request.');
+    }, 1000);
   };
   
   const info = contactContent.info;
@@ -104,15 +188,19 @@ const Contact = () => {
                 </div>
               </div>
 
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={submitFormToWhatsApp}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
                       {t('contact.form.name')}
                     </label>
                     <Input 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
                       placeholder="Tu nombre completo"
                       className="border-border/50 focus:border-primary"
+                      required
                     />
                   </div>
                   <div>
@@ -120,8 +208,12 @@ const Contact = () => {
                       {t('contact.form.phone')}
                     </label>
                     <Input 
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       placeholder="(555) 123-4567"
                       className="border-border/50 focus:border-primary"
+                      required
                     />
                   </div>
                 </div>
@@ -131,9 +223,13 @@ const Contact = () => {
                     {t('contact.form.email')}
                   </label>
                   <Input 
+                    name="email"
                     type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     placeholder="tu@email.com"
                     className="border-border/50 focus:border-primary"
+                    required
                   />
                 </div>
 
@@ -141,8 +237,13 @@ const Contact = () => {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     {t('contact.form.service')}
                   </label>
-                  <select className="w-full p-3 border border-border/50 rounded-lg bg-background text-foreground focus:border-primary focus:outline-none">
-                    <option>{t('contact.form.service_placeholder')}</option>
+                  <select 
+                    name="service"
+                    value={formData.service}
+                    onChange={handleInputChange}
+                    className="w-full p-3 border border-border/50 rounded-lg bg-background text-foreground focus:border-primary focus:outline-none"
+                  >
+                    <option value="">{t('contact.form.service_placeholder')}</option>
                     {services.map((service, index) => (
                       <option key={index} value={service}>
                         {service}
@@ -156,6 +257,9 @@ const Contact = () => {
                     {t('contact.form.message')}
                   </label>
                   <Textarea 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
                     placeholder={t('contact.form.message_placeholder')}
                     rows={4}
                     className="border-border/50 focus:border-primary resize-none"
@@ -164,10 +268,14 @@ const Contact = () => {
 
                 <Button 
                   type="submit"
-                  className="w-full bg-gradient-ocean hover:shadow-pool transition-all duration-300 transform hover:scale-105 py-3"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-ocean hover:shadow-pool transition-all duration-300 transform hover:scale-105 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {t('contact.form.submit')}
+                  {isSubmitting 
+                    ? (language === 'es' ? 'Enviando...' : 'Sending...') 
+                    : t('contact.form.submit')
+                  }
                 </Button>
               </form>
             </CardContent>
