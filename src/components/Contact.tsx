@@ -96,25 +96,34 @@ const Contact = () => {
     const encodedMessage = encodeURIComponent(whatsappMessage);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-    // Abrir WhatsApp
-    window.open(whatsappUrl, '_blank');
+    // Mostrar mensaje de confirmación primero
+    alert(language === 'es' 
+      ? '¡Formulario enviado! Redirigiendo a WhatsApp...' 
+      : 'Form submitted! Redirecting to WhatsApp...');
 
-    // Limpiar formulario después de un breve delay
+    // Limpiar formulario
+    setFormData({
+      name: '',
+      phone: '',
+      email: '',
+      service: '',
+      message: ''
+    });
+    setIsSubmitting(false);
+
+    // Usar un pequeño delay antes de abrir WhatsApp para evitar conflictos
     setTimeout(() => {
-      setFormData({
-        name: '',
-        phone: '',
-        email: '',
-        service: '',
-        message: ''
-      });
-      setIsSubmitting(false);
+      // Detectar si es un dispositivo móvil
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
-      // Mostrar mensaje de confirmación
-      alert(language === 'es' 
-        ? '¡Formulario enviado! Se abrirá WhatsApp con su solicitud.' 
-        : 'Form submitted! WhatsApp will open with your request.');
-    }, 1000);
+      if (isMobile) {
+        // En móviles, usar location.href
+        window.location.href = whatsappUrl;
+      } else {
+        // En desktop, usar window.open con parámetros optimizados
+        window.open(whatsappUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+      }
+    }, 500);
   };
   
   const info = contactContent.info;
