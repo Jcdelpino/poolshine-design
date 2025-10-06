@@ -272,21 +272,17 @@ const translations = {
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
 
-  // Load language from localStorage on mount (with one-time migration to EN default)
+  // Load language from localStorage on mount
   useEffect(() => {
     try {
-      const migrated = localStorage.getItem('lang_migrated_to_en_default') === '1';
       const savedLanguage = localStorage.getItem('language') as Language | null;
-
-      if (!migrated) {
-        setLanguage('en');
-        localStorage.setItem('language', 'en');
-        localStorage.setItem('lang_migrated_to_en_default', '1');
-        return;
-      }
-
+      
       if (savedLanguage === 'es' || savedLanguage === 'en') {
         setLanguage(savedLanguage);
+      } else {
+        // Default to English if no saved language
+        setLanguage('en');
+        localStorage.setItem('language', 'en');
       }
     } catch {
       // If localStorage is unavailable, keep default 'en'

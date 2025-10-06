@@ -34,7 +34,7 @@ export class ContentService {
         console.log('✅ Content loaded from Supabase successfully');
         console.log('📅 Last updated:', data.updated_at);
         console.log('👤 Updated by:', data.updated_by);
-        return data.content_data as SiteContent;
+        return data.content_data as unknown as SiteContent;
       }
 
       console.log('ℹ️ No content found in Supabase');
@@ -99,9 +99,9 @@ export class ContentService {
         .from('site_content')
         .upsert({
           content_key: CONTENT_KEY,
-          content_data: content,
+          content_data: content as any,
           updated_by: currentUser?.id || null
-        }, {
+        } as any, {
           onConflict: 'content_key'
         });
 
