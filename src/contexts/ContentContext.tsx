@@ -309,7 +309,7 @@ const defaultContent: SiteContent = {
       subtitle: '¿Listo para tener la piscina de tus sueños? Contáctanos para una cotización gratuita y personalizada.',
       info: {
         phone: '+52 (555) 123-4567',
-        email: 'info@totalpoolservice.com',
+        email: 'totalpoolserv@aol.com',
         location: 'Ciudad de México y Área Metropolitana',
         hours: 'Lun - Dom: 8:00 AM - 8:00 PM'
       },
@@ -322,7 +322,7 @@ const defaultContent: SiteContent = {
       subtitle: 'Ready to have the pool of your dreams? Contact us for a free and personalized quote.',
       info: {
         phone: '+52 (555) 123-4567',
-        email: 'info@totalpoolservice.com',
+        email: 'totalpoolserv@aol.com',
         location: 'Mexico City and Metropolitan Area',
         hours: 'Mon - Sun: 8:00 AM - 8:00 PM'
       },

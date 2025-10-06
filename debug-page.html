@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Poolshine Design</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug - Poolshine Design</h1>
+    
+    <div class="status info">
+        <h3>📊 Estado del Servidor</h3>
+        <p>Servidor corriendo en: <strong>http://localhost:8080/</strong></p>
+        <p>Timestamp: <span id="timestamp"></span></p>
+    </div>
+
+    <div class="status info">
+        <h3>🔗 Enlaces de Prueba</h3>
+        <ul>
+            <li><a href="http://localhost:8080/" target="_blank">🏠 Página Principal</a></li>
+            <li><a href="http://localhost:8080/admin" target="_blank">🔐 Panel de Administración</a></li>
+            <li><a href="http://localhost:8080/auth" target="_blank">👤 Página de Autenticación</a></li>
+        </ul>
+    </div>
+
+    <div class="status info">
+        <h3>⚙️ Configuración de Supabase</h3>
+        <p>URL: <code>https://lvhpsqbqbhepauvmnbjm.supabase.co</code></p>
+        <p>Key: <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></p>
+    </div>
+
+    <div class="status info">
+        <h3>🔧 Instrucciones de Diagnóstico</h3>
+        <ol>
+            <li><strong>Abre la consola del navegador</strong> (F12 > Console)</li>
+            <li><strong>Ve a la página principal</strong> y verifica si hay errores</li>
+            <li><strong>Prueba el panel de administración</strong> con contraseña: <code>Tinedoy1971</code></li>
+            <li><strong>Verifica el estado de Supabase</strong> en la tarjeta de estado</li>
+        </ol>
+    </div>
+
+    <div class="status info">
+        <h3>🚨 Problemas Comunes</h3>
+        <ul>
+            <li><strong>Página en blanco:</strong> Verificar errores en consola</li>
+            <li><strong>Error de módulos:</strong> Verificar que todas las dependencias estén instaladas</li>
+            <li><strong>Error de Supabase:</strong> Verificar variables de entorno</li>
+            <li><strong>Error de rutas:</strong> Verificar que React Router esté funcionando</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        
+        // Probar conexión con el servidor
+        fetch('http://localhost:8080/')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Servidor respondiendo correctamente');
+                } else {
+                    console.log('❌ Error en el servidor:', response.status);
+                }
+            })
+            .catch(error => {
+                console.log('❌ No se puede conectar al servidor:', error);
+            });
+    </script>
+</body>
+</html>
+

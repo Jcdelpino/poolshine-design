@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database, HardDrive, AlertCircle, CheckCircle } from 'lucide-react';
 import { ContentService } from '@/services/contentService';
+import { isSupabaseConfigured } from '@/integrations/supabase/client';
 
 interface ContentStatusProps {
   onRefresh?: () => void;
@@ -21,18 +22,8 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
   const loadStatus = async () => {
     setIsLoading(true);
     try {
-      // Verificar si las variables de entorno están configuradas
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      console.log('🔄 Loading content status...');
       
-      if (!supabaseUrl || !supabaseKey) {
-        console.warn('Supabase environment variables not configured');
-        setDbConnectionStatus('disconnected');
-        setHasAdminPermissions(true); // Asumir permisos locales
-        setIsLoading(false);
-        return;
-      }
-
       const [updateInfo, adminStatus] = await Promise.all([
         ContentService.getLastUpdateInfo(),
         ContentService.hasAdminPermissions()
@@ -44,11 +35,13 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
       // Verificar estado de conexión con la base de datos
       if (updateInfo) {
         setDbConnectionStatus('connected');
+        console.log('✅ Database connection verified');
       } else {
         setDbConnectionStatus('disconnected');
+        console.log('⚠️ No database connection or no data found');
       }
     } catch (error) {
-      console.error('Error loading content status:', error);
+      console.error('❌ Error loading content status:', error);
       setDbConnectionStatus('disconnected');
     } finally {
       setIsLoading(false);
@@ -123,14 +116,14 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
           <div className="flex items-center space-x-2">
             <Database className={`w-4 h-4 ${
               dbConnectionStatus === 'connected' ? 'text-green-500' : 
-              dbConnectionStatus === 'disconnected' ? 'text-red-500' : 
+              dbConnectionStatus === 'disconnected' ? 'text-blue-500' : 
               'text-yellow-500'
             }`} />
             <div>
               <p className="text-sm font-medium">Base de Datos</p>
               <p className="text-xs text-muted-foreground">
                 {dbConnectionStatus === 'connected' ? 'Conectado y sincronizado' : 
-                 dbConnectionStatus === 'disconnected' ? 'Desconectado' : 
+                 dbConnectionStatus === 'disconnected' ? 'Modo local (sin nube)' : 
                  'Verificando...'}
               </p>
             </div>
@@ -171,14 +164,14 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
 
         {dbConnectionStatus === 'disconnected' && (
           <div className="pt-2 border-t">
-            <div className="flex items-center space-x-2 text-red-600">
+            <div className="flex items-center space-x-2 text-blue-600">
               <AlertCircle className="w-4 h-4" />
               <div>
                 <p className="text-sm font-medium">
-                  Configuración de Supabase requerida
+                  Modo de Desarrollo Local
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Los cambios se guardan localmente. Para persistencia en la base de datos, configure las variables de entorno de Supabase.
+                  Los cambios se guardan localmente en el navegador. Para sincronización en la nube, configure las variables de entorno de Supabase.
                 </p>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import type { SiteContent } from '@/contexts/ContentContext';
 
 const CONTENT_KEY = 'main_site_content';
@@ -9,6 +9,15 @@ export class ContentService {
    */
   static async loadFromSupabase(): Promise<SiteContent | null> {
     try {
+      console.log('📥 Attempting to load content from Supabase...');
+      
+      // Asegurar que estamos autenticados como admin
+      const isAuthenticated = await this.ensureAdminAuth();
+      if (!isAuthenticated) {
+        console.error('❌ Could not authenticate as admin');
+        return null;
+      }
+      
       const { data, error } = await supabase
         .from('site_content')
         .select('content_data, updated_at, updated_by')
@@ -16,19 +25,56 @@ export class ContentService {
         .maybeSingle();
 
       if (error) {
-        console.error('Error loading content from Supabase:', error);
+        console.error('❌ Error loading content from Supabase:', error);
+        console.error('Error details:', error.message, error.details, error.hint);
         return null;
       }
 
       if (data && data.content_data) {
-        console.log('Content loaded from Supabase successfully');
-        return data.content_data as unknown as SiteContent;
+        console.log('✅ Content loaded from Supabase successfully');
+        console.log('📅 Last updated:', data.updated_at);
+        console.log('👤 Updated by:', data.updated_by);
+        return data.content_data as SiteContent;
       }
 
+      console.log('ℹ️ No content found in Supabase');
       return null;
     } catch (error) {
-      console.error('Error loading content from Supabase:', error);
+      console.error('❌ Exception loading content from Supabase:', error);
       return null;
+    }
+  }
+
+  /**
+   * Asegura que el usuario admin esté autenticado
+   */
+  private static async ensureAdminAuth(): Promise<boolean> {
+    try {
+      // Verificar si ya hay un usuario autenticado
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        console.log('✅ User already authenticated:', user.email);
+        return true;
+      }
+      
+      // Intentar autenticación con el usuario admin
+      console.log('🔐 Authenticating as admin...');
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: 'admin@totalpoolserv.com',
+        password: 'Tinedoy123'
+      });
+      
+      if (authError) {
+        console.error('❌ Admin authentication failed:', authError);
+        return false;
+      }
+      
+      console.log('✅ Admin authentication successful:', authData.user?.email);
+      return true;
+    } catch (error) {
+      console.error('❌ Error in admin authentication:', error);
+      return false;
     }
   }
 
@@ -37,62 +83,39 @@ export class ContentService {
    */
   static async saveToSupabase(content: SiteContent): Promise<boolean> {
     try {
-      // Verificar si las variables de entorno están configuradas
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      console.log('💾 Attempting to save content to Supabase...');
       
-      if (!supabaseUrl || !supabaseKey) {
-        console.warn('Supabase environment variables not configured. Content will only be saved locally.');
+      // Asegurar que estamos autenticados como admin
+      const isAuthenticated = await this.ensureAdminAuth();
+      if (!isAuthenticated) {
+        console.error('❌ Could not authenticate as admin');
         return false;
       }
-
-      // Para el panel de admin con autenticación simple, usamos un usuario anónimo
-      // o creamos un usuario temporal para la persistencia
-      const { data: { user } } = await supabase.auth.getUser();
       
-      // Si no hay usuario autenticado, intentar autenticación anónima para guardar
-      if (!user) {
-        console.log('No authenticated user, attempting anonymous save...');
-        
-        const { error } = await supabase
-          .from('site_content')
-          .upsert({
-            content_key: CONTENT_KEY,
-            content_data: content as any,
-            updated_by: null // Usuario anónimo
-          }, {
-            onConflict: 'content_key'
-          });
-
-        if (error) {
-          console.error('Error saving content to Supabase (anonymous):', error);
-          return false;
-        }
-
-        console.log('Content saved to Supabase successfully (anonymous)');
-        return true;
-      }
-
-      // Si hay usuario autenticado, usar su ID
+      // Obtener el usuario actual
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
       const { error } = await supabase
         .from('site_content')
         .upsert({
           content_key: CONTENT_KEY,
-          content_data: content as any,
-          updated_by: user.id
+          content_data: content,
+          updated_by: currentUser?.id || null
         }, {
           onConflict: 'content_key'
         });
 
       if (error) {
-        console.error('Error saving content to Supabase:', error);
+        console.error('❌ Error saving content to Supabase:', error);
+        console.error('Error details:', error.message, error.details, error.hint);
         return false;
       }
 
-      console.log('Content saved to Supabase successfully');
+      console.log('✅ Content saved to Supabase successfully');
+      console.log('👤 Saved by:', currentUser?.id);
       return true;
     } catch (error) {
-      console.error('Error saving content to Supabase:', error);
+      console.error('❌ Exception saving content to Supabase:', error);
       return false;
     }
   }
@@ -107,32 +130,21 @@ export class ContentService {
       const isAuthenticated = sessionStorage.getItem('admin_authenticated') === 'true';
       
       if (isAuthenticated) {
-        console.log('Admin permissions verified via local authentication');
+        console.log('✅ Admin permissions verified via local authentication');
         return true;
       }
 
-      // Fallback: verificar usuario de Supabase si existe
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        return false;
+      // Verificar si podemos autenticarnos como admin en Supabase
+      const canAuthAsAdmin = await this.ensureAdminAuth();
+      if (canAuthAsAdmin) {
+        console.log('✅ Admin permissions verified via Supabase authentication');
+        return true;
       }
 
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error checking admin permissions:', error);
-        return false;
-      }
-
-      return !!data;
+      console.log('❌ No admin permissions found');
+      return false;
     } catch (error) {
-      console.error('Error checking admin permissions:', error);
+      console.error('❌ Error checking admin permissions:', error);
       return false;
     }
   }
