@@ -21,6 +21,18 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
   const loadStatus = async () => {
     setIsLoading(true);
     try {
+      // Verificar si las variables de entorno están configuradas
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        console.warn('Supabase environment variables not configured');
+        setDbConnectionStatus('disconnected');
+        setHasAdminPermissions(true); // Asumir permisos locales
+        setIsLoading(false);
+        return;
+      }
+
       const [updateInfo, adminStatus] = await Promise.all([
         ContentService.getLastUpdateInfo(),
         ContentService.hasAdminPermissions()
@@ -161,9 +173,14 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
           <div className="pt-2 border-t">
             <div className="flex items-center space-x-2 text-red-600">
               <AlertCircle className="w-4 h-4" />
-              <p className="text-sm">
-                Sin conexión a la base de datos. Los cambios se guardan localmente y se sincronizarán cuando se restaure la conexión.
-              </p>
+              <div>
+                <p className="text-sm font-medium">
+                  Configuración de Supabase requerida
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Los cambios se guardan localmente. Para persistencia en la base de datos, configure las variables de entorno de Supabase.
+                </p>
+              </div>
             </div>
           </div>
         )}

@@ -37,6 +37,15 @@ export class ContentService {
    */
   static async saveToSupabase(content: SiteContent): Promise<boolean> {
     try {
+      // Verificar si las variables de entorno están configuradas
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        console.warn('Supabase environment variables not configured. Content will only be saved locally.');
+        return false;
+      }
+
       // Para el panel de admin con autenticación simple, usamos un usuario anónimo
       // o creamos un usuario temporal para la persistencia
       const { data: { user } } = await supabase.auth.getUser();
