@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useContent } from '@/contexts/ContentContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import AdminLogin from '@/components/AdminLogin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -31,9 +33,29 @@ import {
 const Admin = () => {
   console.log('Admin component is loading...');
   
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando acceso...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return <AdminLogin />;
+  }
+  
   try {
     const { content, updateContent, saveContent, loadContent } = useContent();
     const { language, setLanguage } = useLanguage();
+    const { logout } = useAuth();
     const [activeTab, setActiveTab] = useState('hero');
     const [previewMode, setPreviewMode] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -177,6 +199,14 @@ const Admin = () => {
                 <Button onClick={handleSave} className="bg-primary">
                   <Save className="w-4 h-4 mr-2" />
                   Guardar cambios
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  onClick={logout}
+                  className="text-destructive hover:text-destructive"
+                >
+                  Cerrar Sesión
                 </Button>
               </div>
             </div>
