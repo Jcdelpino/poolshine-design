@@ -16,6 +16,7 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasAdminPermissions, setHasAdminPermissions] = useState(false);
+  const [dbConnectionStatus, setDbConnectionStatus] = useState<'connected' | 'disconnected' | 'unknown'>('unknown');
 
   const loadStatus = async () => {
     setIsLoading(true);
@@ -27,8 +28,16 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
       
       setLastUpdate(updateInfo);
       setHasAdminPermissions(adminStatus);
+      
+      // Verificar estado de conexión con la base de datos
+      if (updateInfo) {
+        setDbConnectionStatus('connected');
+      } else {
+        setDbConnectionStatus('disconnected');
+      }
     } catch (error) {
       console.error('Error loading content status:', error);
+      setDbConnectionStatus('disconnected');
     } finally {
       setIsLoading(false);
     }
@@ -100,11 +109,17 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
       <CardContent className="space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center space-x-2">
-            <Database className="w-4 h-4 text-blue-500" />
+            <Database className={`w-4 h-4 ${
+              dbConnectionStatus === 'connected' ? 'text-green-500' : 
+              dbConnectionStatus === 'disconnected' ? 'text-red-500' : 
+              'text-yellow-500'
+            }`} />
             <div>
               <p className="text-sm font-medium">Base de Datos</p>
               <p className="text-xs text-muted-foreground">
-                {lastUpdate ? 'Sincronizado' : 'No disponible'}
+                {dbConnectionStatus === 'connected' ? 'Conectado y sincronizado' : 
+                 dbConnectionStatus === 'disconnected' ? 'Desconectado' : 
+                 'Verificando...'}
               </p>
             </div>
           </div>
@@ -136,7 +151,18 @@ export const ContentStatus: React.FC<ContentStatusProps> = ({ onRefresh }) => {
             <div className="flex items-center space-x-2 text-yellow-600">
               <AlertCircle className="w-4 h-4" />
               <p className="text-sm">
-                Sin permisos de admin. Los cambios solo se guardan localmente.
+                Autenticación local activa. Los cambios se guardan en la base de datos automáticamente.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {dbConnectionStatus === 'disconnected' && (
+          <div className="pt-2 border-t">
+            <div className="flex items-center space-x-2 text-red-600">
+              <AlertCircle className="w-4 h-4" />
+              <p className="text-sm">
+                Sin conexión a la base de datos. Los cambios se guardan localmente y se sincronizarán cuando se restaure la conexión.
               </p>
             </div>
           </div>

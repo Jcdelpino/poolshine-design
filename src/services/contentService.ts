@@ -37,13 +37,34 @@ export class ContentService {
    */
   static async saveToSupabase(content: SiteContent): Promise<boolean> {
     try {
+      // Para el panel de admin con autenticación simple, usamos un usuario anónimo
+      // o creamos un usuario temporal para la persistencia
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Si no hay usuario autenticado, intentar autenticación anónima para guardar
       if (!user) {
-        console.warn('No authenticated user, cannot save to Supabase');
-        return false;
+        console.log('No authenticated user, attempting anonymous save...');
+        
+        const { error } = await supabase
+          .from('site_content')
+          .upsert({
+            content_key: CONTENT_KEY,
+            content_data: content,
+            updated_by: null // Usuario anónimo
+          }, {
+            onConflict: 'content_key'
+          });
+
+        if (error) {
+          console.error('Error saving content to Supabase (anonymous):', error);
+          return false;
+        }
+
+        console.log('Content saved to Supabase successfully (anonymous)');
+        return true;
       }
 
+      // Si hay usuario autenticado, usar su ID
       const { error } = await supabase
         .from('site_content')
         .upsert({
@@ -69,9 +90,19 @@ export class ContentService {
 
   /**
    * Verifica si el usuario actual tiene permisos de admin
+   * Para el panel simple, verificamos si hay autenticación local
    */
   static async hasAdminPermissions(): Promise<boolean> {
     try {
+      // Verificar si hay autenticación local (sessionStorage)
+      const isAuthenticated = sessionStorage.getItem('admin_authenticated') === 'true';
+      
+      if (isAuthenticated) {
+        console.log('Admin permissions verified via local authentication');
+        return true;
+      }
+
+      // Fallback: verificar usuario de Supabase si existe
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {

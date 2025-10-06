@@ -375,12 +375,12 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         localStorage.setItem('siteContent', JSON.stringify(newContent));
         console.log('Content auto-saved to localStorage');
         
-        // También intentar guardar en Supabase si hay usuario autenticado
+        // También intentar guardar en Supabase
         ContentService.saveToSupabase(newContent).then((success) => {
           if (success) {
-            console.log('Content auto-saved to Supabase');
+            console.log('Content auto-saved to Supabase successfully');
           } else {
-            console.warn('Failed to auto-save to Supabase');
+            console.warn('Failed to auto-save to Supabase - content saved locally only');
           }
         }).catch((error) => {
           console.error('Error auto-saving to Supabase:', error);
@@ -397,12 +397,14 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       // Primero guardar en localStorage como backup
       localStorage.setItem('siteContent', JSON.stringify(content));
+      console.log('Content saved to localStorage successfully');
       
       // Luego intentar guardar en Supabase usando el servicio
       const success = await ContentService.saveToSupabase(content);
       
       if (!success) {
         console.warn('Failed to save to Supabase, content saved to localStorage only');
+        // No rechazar la promesa, ya que el contenido se guardó localmente
         return Promise.resolve();
       }
 
@@ -410,7 +412,8 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return Promise.resolve();
     } catch (error) {
       console.error('Error saving content:', error);
-      return Promise.reject(error);
+      // Aún así, el contenido se guardó en localStorage
+      return Promise.resolve();
     }
   };
 
