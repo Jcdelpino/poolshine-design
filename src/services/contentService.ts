@@ -22,7 +22,7 @@ export class ContentService {
 
       if (data && data.content_data) {
         console.log('Content loaded from Supabase successfully');
-        return data.content_data as SiteContent;
+        return data.content_data as unknown as SiteContent;
       }
 
       return null;
@@ -58,7 +58,7 @@ export class ContentService {
           .from('site_content')
           .upsert({
             content_key: CONTENT_KEY,
-            content_data: content,
+            content_data: content as any,
             updated_by: null // Usuario anónimo
           }, {
             onConflict: 'content_key'
@@ -78,7 +78,7 @@ export class ContentService {
         .from('site_content')
         .upsert({
           content_key: CONTENT_KEY,
-          content_data: content,
+          content_data: content as any,
           updated_by: user.id
         }, {
           onConflict: 'content_key'
