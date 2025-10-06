@@ -8,6 +8,7 @@ import { Lock, Eye, EyeOff } from 'lucide-react';
 
 const AdminLogin = () => {
   const { login } = useAuth();
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -21,9 +22,10 @@ const AdminLogin = () => {
     // Simulate a small delay for better UX
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const success = login(password);
+    const success = login(username, password);
     if (!success) {
-      setError('Contraseña incorrecta. Inténtalo de nuevo.');
+      setError('Usuario o contraseña incorrectos. Inténtalo de nuevo.');
+      setUsername('');
       setPassword('');
     }
     setIsLoading(false);
@@ -50,6 +52,21 @@ const AdminLogin = () => {
             )}
             
             <div className="space-y-2">
+              <label htmlFor="username" className="text-sm font-medium">
+                Usuario
+              </label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Ingresa tu usuario"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
                 Contraseña
               </label>
@@ -59,7 +76,7 @@ const AdminLogin = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Ingresa la contraseña"
+                  placeholder="Ingresa tu contraseña"
                   className="pr-10"
                   required
                   disabled={isLoading}
@@ -84,7 +101,7 @@ const AdminLogin = () => {
             <Button 
               type="submit" 
               className="w-full" 
-              disabled={isLoading || !password.trim()}
+              disabled={isLoading || !username.trim() || !password.trim()}
             >
               {isLoading ? 'Verificando...' : 'Acceder'}
             </Button>
