@@ -7,7 +7,8 @@ import {
   Sparkles, 
   Shield, 
   Clock, 
-  Award 
+  Award,
+  PenTool 
 } from 'lucide-react';
 
 const Services = () => {
@@ -35,6 +36,12 @@ const Services = () => {
   };
   
   const services = [
+    {
+      icon: PenTool,
+      title: t('services.design.title'),
+      description: t('services.design.desc'),
+      features: [t('services.design.feat1'), t('services.design.feat2'), t('services.design.feat3')]
+    },
     {
       icon: Droplets,
       title: t('services.cleaning.title'),
@@ -64,12 +71,6 @@ const Services = () => {
       title: t('services.support.title'),
       description: t('services.support.desc'),
       features: [t('services.support.feat1'), t('services.support.feat2'), t('services.support.feat3')]
-    },
-    {
-      icon: Award,
-      title: t('services.warranty.title'),
-      description: t('services.warranty.desc'),
-      features: [t('services.warranty.feat1'), t('services.warranty.feat2'), t('services.warranty.feat3')]
     }
   ];
 

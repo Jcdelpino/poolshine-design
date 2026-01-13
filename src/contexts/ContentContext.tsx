@@ -182,6 +182,12 @@ const defaultContent: SiteContent = {
       customCta: 'Solicitar Cotización Personalizada',
       items: [
         {
+          id: 'design',
+          title: 'Nuevo Diseño y Construcción',
+          description: 'Diseñamos y construimos la piscina de tus sueños desde cero. Desde conceptos modernos hasta estilos clásicos, hacemos realidad tu visión.',
+          features: ['Diseño personalizado 3D', 'Construcción completa', 'Permisos y planificación']
+        },
+        {
           id: 'cleaning',
           title: 'Limpieza Profesional',
           description: 'Limpieza profunda de piscinas con equipos especializados y productos de alta calidad.',
@@ -209,6 +215,12 @@ const defaultContent: SiteContent = {
       customDesc: 'Contact our team to receive a personalized quote according to your pool\'s specific needs.',
       customCta: 'Request Custom Quote',
       items: [
+        {
+          id: 'design',
+          title: 'New Design & Construction',
+          description: 'We design and build the pool of your dreams from scratch. From modern concepts to classic styles, we bring your vision to life.',
+          features: ['Custom 3D design', 'Complete construction', 'Permits & planning']
+        },
         {
           id: 'cleaning',
           title: 'Professional Cleaning',
