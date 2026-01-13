@@ -47,14 +47,19 @@ const Hero = () => {
       </div>
 
       {/* Certified Badge */}
-      <div className="absolute top-20 right-4 md:top-24 md:right-8 z-20 animate-pulse">
-        <div className="relative">
-          <div className="absolute inset-0 bg-accent/30 blur-xl rounded-full"></div>
-          <div className="relative bg-gradient-to-br from-accent via-yellow-400 to-accent border-4 border-yellow-300 rounded-2xl p-4 md:p-5 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-            <div className="flex flex-col items-center text-center">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-primary mb-1" />
-              <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-wide">Certified</span>
-              <span className="text-sm md:text-base font-extrabold text-primary leading-tight">Pool Contractor</span>
+      <div className="absolute top-20 right-4 md:top-24 md:right-8 z-20">
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent opacity-20 blur-lg rounded-lg group-hover:opacity-30 transition-opacity"></div>
+          <div className="relative bg-white/95 backdrop-blur-sm border border-primary/20 rounded-lg p-3 md:p-4 shadow-xl">
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
+                <Award className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] md:text-xs font-semibold text-primary/70 uppercase tracking-wider">Licensed & Certified</span>
+                <span className="text-sm md:text-base font-bold text-primary leading-tight">Pool Contractor</span>
+                <span className="text-[10px] md:text-xs font-mono text-muted-foreground">CPC 1461345</span>
+              </div>
             </div>
           </div>
         </div>
