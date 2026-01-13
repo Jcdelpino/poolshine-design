@@ -19,7 +19,7 @@ const Gallery = () => {
   const { content } = useContent();
   const galleryContent = content.gallery[language as 'es' | 'en'];
 
-  const categories = [t('gallery.filter.all'), t('gallery.filter.maintenance'), t('gallery.filter.renovation'), t('gallery.filter.cleaning')];
+  const categories = [t('gallery.filter.all'), t('gallery.filter.maintenance'), t('gallery.filter.renovation'), t('gallery.filter.cleaning'), t('gallery.filter.construction')];
   const [activeCategory, setActiveCategory] = useState(t('gallery.filter.all'));
 
   const filteredItems = activeCategory === t('gallery.filter.all')
