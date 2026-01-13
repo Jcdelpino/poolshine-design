@@ -1,5 +1,5 @@
 import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
-import type { SiteContent } from '@/contexts/ContentContext';
+import type { SiteContent } from '@/types/content';
 
 const CONTENT_KEY = 'main_site_content';
 
