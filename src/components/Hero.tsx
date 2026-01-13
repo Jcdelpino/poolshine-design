@@ -52,8 +52,8 @@ const Hero = () => {
           <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent opacity-20 blur-lg rounded-lg group-hover:opacity-30 transition-opacity"></div>
           <div className="relative bg-white/95 backdrop-blur-sm border border-primary/20 rounded-lg p-3 md:p-4 shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-slate-300 via-slate-100 to-slate-400 rounded-full flex items-center justify-center shadow-inner border border-slate-300">
-                <Award className="w-5 h-5 md:w-6 md:h-6 text-slate-700 drop-shadow-sm" style={{ filter: 'drop-shadow(0 1px 1px rgba(255,255,255,0.5))' }} />
+              <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-yellow-300 via-yellow-100 to-amber-400 rounded-full flex items-center justify-center shadow-inner border border-yellow-400">
+                <Award className="w-5 h-5 md:w-6 md:h-6 text-amber-700 drop-shadow-sm" style={{ filter: 'drop-shadow(0 1px 1px rgba(255,255,255,0.5))' }} />
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] md:text-xs font-semibold text-primary/70 uppercase tracking-wider">Licensed & Certified</span>
