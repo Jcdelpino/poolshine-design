@@ -48,7 +48,7 @@ const Hero = () => {
       </div>
 
       {/* Certified Badge */}
-      <div className="absolute top-32 right-2 md:top-24 md:right-8 z-20 scale-75 md:scale-100 origin-top-right">
+      <div className="fixed top-20 right-2 md:top-24 md:right-8 z-50 scale-75 md:scale-100 origin-top-right">
         <div className="relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent opacity-20 blur-lg rounded-lg group-hover:opacity-30 transition-opacity"></div>
           <div className="relative bg-white/95 backdrop-blur-sm border border-primary/20 rounded-lg p-3 md:p-4 shadow-xl">
