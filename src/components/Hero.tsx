@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Phone } from 'lucide-react';
+import { CheckCircle, Phone, Award } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContent } from '@/contexts/ContentContext';
 import heroImage from '@/assets/hero-pool.jpg';
@@ -44,6 +44,20 @@ const Hero = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/60 to-transparent"></div>
+      </div>
+
+      {/* Certified Badge */}
+      <div className="absolute top-20 right-4 md:top-24 md:right-8 z-20 animate-pulse">
+        <div className="relative">
+          <div className="absolute inset-0 bg-accent/30 blur-xl rounded-full"></div>
+          <div className="relative bg-gradient-to-br from-accent via-yellow-400 to-accent border-4 border-yellow-300 rounded-2xl p-4 md:p-5 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+            <div className="flex flex-col items-center text-center">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-primary mb-1" />
+              <span className="text-xs md:text-sm font-bold text-primary uppercase tracking-wide">Certified</span>
+              <span className="text-sm md:text-base font-extrabold text-primary leading-tight">Pool Contractor</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Content */}
