@@ -76,6 +76,7 @@ const translations = {
     'gallery.filter.maintenance': 'Mantenimiento',
     'gallery.filter.renovation': 'Renovación',
     'gallery.filter.cleaning': 'Limpieza',
+    'gallery.filter.construction': 'Nueva Construcción',
     
     // Testimonials
     'testimonials.title': 'Lo que dicen nuestros',
@@ -204,6 +205,7 @@ const translations = {
     'gallery.filter.maintenance': 'Maintenance',
     'gallery.filter.renovation': 'Renovation',
     'gallery.filter.cleaning': 'Cleaning',
+    'gallery.filter.construction': 'New Construction',
     
     // Testimonials
     'testimonials.title': 'What our',
