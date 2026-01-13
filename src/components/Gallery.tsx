@@ -151,7 +151,7 @@ const Gallery = () => {
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {group.items.length > 1 
-                    ? `${group.items.length} ${language === 'es' ? 'proyectos' : 'projects'}`
+                    ? `${group.items.length} ${language === 'es' ? 'imágenes' : 'images'}`
                     : group.description
                   }
                 </p>
